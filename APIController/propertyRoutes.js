@@ -6,15 +6,16 @@ import moment from 'moment-timezone';
 const router = express.Router();
 
 
+
 // Add Property Route with created_on, updated_on, status
 router.post('/addproperty', (req, res) => {
   const {
     username, city, locality, property_name, address, configuration, area_detail, area_type, bathroom,
     balcony, description, furnish_type, rera_id, floor_no, total_floor, construction_status, property_date,
-    property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit,
+    property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit,category,
     current_lease, remaining_time, boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period,
     pricerange, money_type, amenities, metro, school, hospital, mall, restaurant, bus, cinema, country, 
-    image_repository, lat, lng, purpose, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type
+    image_repository, lat, lng, purpose,residential,commercail,leased, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type
   } = req.body;
 
   // Extract first image from the image repository (assuming it is stored as a comma-separated string)
@@ -31,19 +32,19 @@ router.post('/addproperty', (req, res) => {
   const sql = `
     INSERT INTO property_details (username, city, locality, property_name, address, configuration, area_detail, area_type, bathroom,
     balcony, description, furnish_type, rera_id, floor_no, total_floor, construction_status, property_date,
-    property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit,
+    property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit,category,
     current_lease, remaining_time, boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period,
     pricerange, money_type, amenities, metro, school, hospital, mall, restaurant, bus, cinema, country, 
-    image_repository, lat, lng, one_image_location, purpose, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type,
+    image_repository, lat, lng, one_image_location, purpose,residential,commercail,leased, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type,
     created_on, updated_on, status)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?, ?, ?, ?);
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?, ?, ?, ?,?,?,?,?);
   `;
   
   const values = [username, city, locality, property_name, address, configuration, area_detail, area_type, bathroom, 
     balcony, description, furnish_type, rera_id, floor_no, total_floor, construction_status, property_date, property_facing,
-    price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit, current_lease, remaining_time, 
+    price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit, category, current_lease, remaining_time, 
     boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period, pricerange, money_type, JSON.stringify(amenities),
-    metro, school, hospital, mall, restaurant, bus, cinema, country, image_repository, lat, lng, one_image_location, purpose,
+    metro, school, hospital, mall, restaurant, bus, cinema, country, image_repository, lat, lng, one_image_location, purpose,residential,commercail,leased,
     JSON.stringify(FeaturedAgentsId), JSON.stringify(AgentsOnSpotlightId), Listed_By, type, created_on, updated_on, status];
 
     console.log(values);
