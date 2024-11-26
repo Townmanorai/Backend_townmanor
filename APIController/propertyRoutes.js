@@ -12,15 +12,17 @@ router.post('/addproperty', (req, res) => {
   const {
     username, city, locality, property_name, address, configuration, area_detail, area_type, bathroom,
     balcony, description, furnish_type, rera_id, floor_no, total_floor, construction_status, property_date,
-    property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit,category,
+    property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, securitydeposit,category,
     current_lease, remaining_time, boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period,
     pricerange, money_type, amenities, metro, school, hospital, mall, restaurant, bus, cinema, country, 
     image_repository, lat, lng, purpose,residential,commercail,leased, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type
   } = req.body;
 
-  // Extract first image from the image repository (assuming it is stored as a comma-separated string)
-  const imageArray = image_repository.split(', ');
-  const one_image_location = imageArray[0] || '';  // Default to an empty string if no images
+  // Extract the first image from the image repository
+  let one_image_location = '';
+  if (Array.isArray(image_repository) && image_repository.length > 0) {
+    one_image_location = image_repository[0].image_url || ''; // Extract `image_url` from the first object
+  }
 
    // Convert property_date and generate created_on and updated_on in IST
    const formattedPropertyDate = moment(property_date).tz("Asia/Kolkata").format("YYYY-MM-DDTHH:mm:ss");
@@ -32,7 +34,7 @@ router.post('/addproperty', (req, res) => {
   const sql = `
     INSERT INTO property_details (username, city, locality, property_name, address, configuration, area_detail, area_type, bathroom,
     balcony, description, furnish_type, rera_id, floor_no, total_floor, construction_status, property_date,
-    property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit,category,
+    property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, securitydeposit,category,
     current_lease, remaining_time, boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period,
     pricerange, money_type, amenities, metro, school, hospital, mall, restaurant, bus, cinema, country, 
     image_repository, lat, lng, one_image_location, purpose,residential,commercail,leased, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type,
@@ -42,7 +44,7 @@ router.post('/addproperty', (req, res) => {
   
   const values = [username, city, locality, property_name, address, configuration, area_detail, area_type, bathroom, 
     balcony, description, furnish_type, rera_id, floor_no, total_floor, construction_status, property_date, property_facing,
-    price, maintenance_charge, token_amount, length, width, monthly_rent, security_deposit, category, current_lease, remaining_time, 
+    price, maintenance_charge, token_amount, length, width, monthly_rent, securitydeposit, category, current_lease, remaining_time, 
     boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period, pricerange, money_type, JSON.stringify(amenities),
     metro, school, hospital, mall, restaurant, bus, cinema, country, image_repository, lat, lng, one_image_location, purpose,residential,commercail,leased,
     JSON.stringify(FeaturedAgentsId), JSON.stringify(AgentsOnSpotlightId), Listed_By, type, created_on, updated_on, status];
