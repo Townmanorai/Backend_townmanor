@@ -15,7 +15,7 @@ router.post('/addproperty', (req, res) => {
     property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, securitydeposit,category,
     current_lease, remaining_time, boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period,
     pricerange, money_type, amenities, metro, school, hospital, mall, restaurant, bus, cinema, country, 
-    image_repository, lat, lng, purpose,residential,commercail,leased, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type
+    image_repository,floorplan, lat, lng, purpose,residential,commercail,leased, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type
   } = req.body;
 
   // Extract the first image from the image repository
@@ -37,16 +37,16 @@ router.post('/addproperty', (req, res) => {
     property_facing, price, maintenance_charge, token_amount, length, width, monthly_rent, securitydeposit,category,
     current_lease, remaining_time, boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period,
     pricerange, money_type, amenities, metro, school, hospital, mall, restaurant, bus, cinema, country, 
-    image_repository, lat, lng, one_image_location, purpose,residential,commercail,leased, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type,
+    image_repository, lat, lng, one_image_location, floorplan, purpose,residential,commercail,leased, FeaturedAgentsId, AgentsOnSpotlightId, Listed_By, type,
     created_on, updated_on, status)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?, ?, ?, ?,?,?,?,?);
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?, ?, ?, ?,?,?,?,?);
   `;
   
   const values = [username, city, locality, property_name, address, configuration, area_detail, area_type, bathroom, 
     balcony, description, furnish_type, rera_id, floor_no, total_floor, construction_status, property_date, property_facing,
     price, maintenance_charge, token_amount, length, width, monthly_rent, securitydeposit, category, current_lease, remaining_time, 
     boundary_wall, no_of_open_side, floor_allowed, modify_interior, lock_in_period, pricerange, money_type, JSON.stringify(amenities),
-    metro, school, hospital, mall, restaurant, bus, cinema, country, image_repository, lat, lng, one_image_location, purpose,residential,commercail,leased,
+    metro, school, hospital, mall, restaurant, bus, cinema, country, JSON.stringify(image_repository),JSON.stringify(floorplan), lat, lng, JSON.stringify(one_image_location), purpose,residential,commercail,leased,
     JSON.stringify(FeaturedAgentsId), JSON.stringify(AgentsOnSpotlightId), Listed_By, type, created_on, updated_on, status];
 
     console.log(values);
