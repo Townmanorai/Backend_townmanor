@@ -47,5 +47,5 @@ jobs:
 
           # Restart the PM2 process on the server
           ssh $SERVER_USER@$SERVER_IP << EOF
-            pm2 restart nodejs-app || pm2 start /var/www/nodejs-app/Backend_townmanor/server.js --name nodejs-app
+            pm2 restart nodejs-app || pm2 start /var/www/nodejs-app/Backend_townmanor/index.js --name nodejs-app
           EOF
