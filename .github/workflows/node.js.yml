@@ -1,0 +1,51 @@
+name: Node.js CI and Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      # Step 3: Install dependencies and build
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Application
+        run: npm run build --if-present
+
+      # Step 4: Deploy to Server
+      - name: Deploy to Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+
+          # Transfer files to the server
+          rsync -avz --delete ./build/ $SERVER_USER@$SERVER_IP:/var/www/nodejs-app
+
+          # Restart the PM2 process on the server
+          ssh $SERVER_USER@$SERVER_IP << EOF
+            pm2 restart nodejs-app || pm2 start /var/www/nodejs-app/Backend_townmanor/index.js --name nodejs-app
+          EOF
