@@ -51,6 +51,12 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+// Root route for first-time visits
+app.get('/', (req, res) => {
+  res.send('Backend is up and running!');
+});
+
+
 // Use routes
 app.use(agentRoutes);
 app.use(propertyRoutes);
