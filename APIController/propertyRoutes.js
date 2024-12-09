@@ -5,7 +5,19 @@ import moment from 'moment-timezone';
 
 const router = express.Router();
 
+// Endpoint for Image Upload
+router.post('/upload-images', upload.array('images', 10), (req, res) => {
+  // Check if files were uploaded
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: 'No files were uploaded.' });
+  }
 
+  // Map the file paths
+  const fileNames = req.files.map(file => file.path); // Paths to the uploaded images
+
+  // Send back the file paths as response
+  res.status(200).json({ imagePaths: fileNames });
+}); 
 
 // Add Property Route with created_on, updated_on, status
 router.post('/addproperty', (req, res) => {
