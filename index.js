@@ -29,7 +29,7 @@ const __dirname = dirname(__filename);
 const app = express();
 // app.use(cors());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://ec2-43-205-18-191.ap-south-1.compute.amazonaws.com'], // Frontend domains
+  origin: ['http://localhost:5173', 'http://ec2-43-205-18-191.ap-south-1.compute.amazonaws.com','http://townmanor.ai'], // Frontend domains
   credentials: true, // Allow sending cookies
 }));
 app.use(bodyParser.json());
