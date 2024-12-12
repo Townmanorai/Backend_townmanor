@@ -14,7 +14,7 @@ router.delete('/commercial-details/:id', deleteCommercialDetail);
 // Routes for commercial_units
 router.get('/commercial-units', getCommercialUnits);
 router.get('/commercial-units/:id', getCommercialUnitById);
-router.get('/commercial-units/:com_prop_id', getCommercialUnitByComPropId);
+router.get('/commercial-units/com_prop_id/:com_prop_id', getCommercialUnitByComPropId);
 router.post('/commercial-units', createCommercialUnit);
 router.put('/commercial-units/:id', updateCommercialUnit);
 router.delete('/commercial-units/:id', deleteCommercialUnit);
