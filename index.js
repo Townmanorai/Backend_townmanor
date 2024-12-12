@@ -20,6 +20,7 @@ import userPackage from './APIController/userPackage.js';
 import userplanslimit from './APIController/userplanslimit.js';
 import propertyLeadRoutes from './APIController/propertyLeadRoutes.js';
 import propertyRoutesroute from './routes/propertyRoutes.js'
+import commercialRoutes from './routes/commercialRoutes.js';
 
 
  
@@ -80,6 +81,8 @@ app.use('/api/users', userRoutes);
 app.use(propertyLeadRoutes); 
 
 app.use('/api/properties', propertyRoutesroute);
+
+app.use('/api/commercial', commercialRoutes);
 
 // Start server
 const PORT = 3030;
