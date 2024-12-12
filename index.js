@@ -30,14 +30,23 @@ const __dirname = dirname(__filename);
 const app = express();
 // app.use(cors());
 app.use(cors({
-  origin: [
-    'http://localhost:5173', 
-    'http://ec2-43-205-18-191.ap-south-1.compute.amazonaws.com',
-    'http://townmanor.ai',
-    'http://www.townmanor.ai'
-  ],
-  credentials: true,
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:5173', 
+      'http://ec2-43-205-18-191.ap-south-1.compute.amazonaws.com',
+      'http://townmanor.ai',
+      'http://www.townmanor.ai'
+    ];
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);  // Allow the origin
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,  // Allow cookies to be sent
 }));
+
 
 app.use(bodyParser.json());
 app.use(cookieParser());
