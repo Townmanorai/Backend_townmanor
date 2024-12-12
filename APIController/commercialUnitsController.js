@@ -41,6 +41,21 @@ export const createCommercialUnit = (req, res) => {
   );
 };
 
+// GET commercial unit by com_prop_id
+export const getCommercialUnitByComPropId = (req, res) => {
+    const { com_prop_id } = req.params;  // Extract com_prop_id from the URL parameters
+    db.query('SELECT * FROM commercial_units WHERE com_prop_id = ? AND status != 0', [com_prop_id], (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error fetching commercial unit by com_prop_id', details: err });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'Commercial unit not found' });
+      }
+      res.status(200).json(results);  // Return the array of commercial units associated with the given com_prop_id
+    });
+  };
+  
+
 // PUT (update) commercial unit by ID
 export const updateCommercialUnit = (req, res) => {
   const { id } = req.params;
