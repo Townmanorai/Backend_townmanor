@@ -30,10 +30,17 @@ const __dirname = dirname(__filename);
 const app = express();
 // app.use(cors());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://ec2-43-205-18-191.ap-south-1.compute.amazonaws.com','http://townmanor.ai','http://www.townmanor.ai'], // Frontend domains
+  origin: ['http://localhost:5173', 'http://ec2-43-205-18-191.ap-south-1.compute.amazonaws.com','http://townmanor.ai','http://www.townmanor.ai/','www.townmanor.ai','townmanor.ai'], // Frontend domains
   credentials: true,   // Allow cookies to be sent
 }));
 
+// Handle preflight OPTIONS requests for CORS
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://www.townmanor.ai');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(200);
+});
 
 app.use(bodyParser.json());
 app.use(cookieParser());
