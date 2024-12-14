@@ -1,5 +1,5 @@
 import express from 'express';
-import { getCommercialDetails, getCommercialDetailById, createCommercialDetail, updateCommercialDetail, deleteCommercialDetail } from '../controllers/commercialDetailsController.js';
+import { getCommercialDetails, getCommercialDetailById,getCommercialDetailsByCity, createCommercialDetail, updateCommercialDetail, deleteCommercialDetail } from '../controllers/commercialDetailsController.js';
 import { getCommercialUnits, getCommercialUnitById, createCommercialUnit, updateCommercialUnit, deleteCommercialUnit,getCommercialUnitByComPropId } from '../controllers/commercialUnitsController.js';
 
 const router = express.Router();
@@ -7,6 +7,7 @@ const router = express.Router();
 // Routes for commercial_details
 router.get('/commercial-details', getCommercialDetails);
 router.get('/commercial-details/:id', getCommercialDetailById);
+router.get('/commercial-details/city/:city', getCommercialDetailsByCity);
 router.post('/commercial-details', createCommercialDetail);
 router.put('/commercial-details/:id', updateCommercialDetail);
 router.delete('/commercial-details/:id', deleteCommercialDetail);

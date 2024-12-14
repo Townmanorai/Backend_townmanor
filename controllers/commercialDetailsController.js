@@ -24,6 +24,29 @@ export const getCommercialDetailById = (req, res) => {
   });
 };
 
+// GET three random commercial details by city, return three JSON objects
+export const getCommercialDetailsByCity = (req, res) => {
+  const { city } = req.params;
+
+  // Query to select random 3 entries from commercial_details where the city matches
+  db.query(
+    'SELECT * FROM commercial_details WHERE city = ? AND status != 0 ORDER BY RAND() LIMIT 3',
+    [city],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error fetching commercial details by city', details: err });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'No commercial details found for the specified city' });
+      }
+      
+      // Return each result as a separate JSON object
+      res.status(200).json(results);
+    }
+  );
+};
+
+
 // POST new commercial details
 export const createCommercialDetail = (req, res) => {
   const { project_name, city, address, invest, category, return_policy, possession_date, builder, construction_status, project_unit, latitude, longitude, description, rera_id, project_area_range, video_id, amenities, distance, image_banner, face_image, floorplan, main_image, office_image, retail_shop, restaurant, other } = req.body;
