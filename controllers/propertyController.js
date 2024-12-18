@@ -85,7 +85,7 @@ export const getAdminProperties = (req, res) => {
             COUNT(CASE WHEN type = 'agent' THEN 1 END) AS agentsCount,
             COUNT(CASE WHEN type = 'owner' THEN 1 END) AS ownersCount
      FROM property_details 
-     GROUP BY property_name`,
+     GROUP BY property_name,one_image_location`,
     (error, properties) => {
       if (error) {
         console.error('Error fetching properties:', error);
