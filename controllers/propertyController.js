@@ -81,7 +81,7 @@ export const getOwnerProperties = (req, res) => {
 
 export const getAdminProperties = (req, res) => {
   db.query(
-    `SELECT property_name, 
+    `SELECT property_name, one_image_location,
             COUNT(CASE WHEN type = 'agent' THEN 1 END) AS agentsCount,
             COUNT(CASE WHEN type = 'owner' THEN 1 END) AS ownersCount
      FROM property_details 
