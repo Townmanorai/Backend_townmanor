@@ -78,6 +78,106 @@ export const getOwnerProperties = (req, res) => {
 
 
 
+export const getRentalPropertiesByCity = (req, res) => {
+  const { city, configuration, furnish_type, property_name } = req.query; // Read filters from query parameters
+
+  let baseQuery = `
+    SELECT * FROM property_details 
+    WHERE purpose = "rent" AND Listed_By != "Owner" AND status = "1"
+  `;
+  const queryParams = [];
+
+  // Add city filter if provided
+  if (city) {
+    baseQuery += ' AND city = ?';
+    queryParams.push(city);
+  }
+
+  // Add configuration filter if provided
+  if (configuration) {
+    baseQuery += ' AND configuration = ?';
+    queryParams.push(configuration);
+  }
+
+  // Add furnish type filter if provided
+  if (furnish_type) {
+    baseQuery += ' AND furnish_type = ?';
+    queryParams.push(furnish_type);
+  }
+
+  // Add property_name filter if provided
+  if (property_name) {
+    baseQuery += ' AND property_name LIKE ?';
+    queryParams.push(`%${property_name}%`); // Use LIKE for partial matching
+  }
+
+  // Execute the query with the dynamic filters
+  db.query(baseQuery, queryParams, (err, results) => {
+    if (err) {
+      console.error('Error fetching rental properties:', err);
+      return res.status(500).json({ error: 'An error occurred while fetching rental properties.' });
+    }
+
+    // Check if no results were found
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'No properties found matching the criteria.' });
+    }
+
+    res.status(200).json(results);
+  });
+};
+
+
+export const getOwnerPropertiesByCity = (req, res) => {
+  const { city, configuration, furnish_type, property_name } = req.query; // Read filters from query parameters
+
+  let baseQuery = `
+    SELECT * FROM property_details 
+    WHERE purpose = "sale" AND Listed_By = "Owner" AND status = "1"
+  `;
+  const queryParams = [];
+
+  // Add city filter if provided
+  if (city) {
+    baseQuery += ' AND city = ?';
+    queryParams.push(city);
+  }
+
+  // Add configuration filter if provided
+  if (configuration) {
+    baseQuery += ' AND configuration = ?';
+    queryParams.push(configuration);
+  }
+
+  // Add furnish type filter if provided
+  if (furnish_type) {
+    baseQuery += ' AND furnish_type = ?';
+    queryParams.push(furnish_type);
+  }
+
+  // Add property_name filter if provided
+  if (property_name) {
+    baseQuery += ' AND property_name LIKE ?';
+    queryParams.push(`%${property_name}%`); // Use LIKE for partial matching
+  }
+
+  // Execute the query with the dynamic filters
+  db.query(baseQuery, queryParams, (err, results) => {
+    if (err) {
+      console.error('Error fetching owner properties:', err);
+      return res.status(500).json({ error: 'An error occurred while fetching owner properties.' });
+    }
+
+    // Check if no results were found
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'No properties found matching the criteria.' });
+    }
+
+    res.status(200).json(results);
+  });
+};
+
+
 
 export const getAdminProperties = (req, res) => {
   db.query(
