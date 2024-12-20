@@ -36,7 +36,7 @@ app.use(cors({
 
 // Handle preflight OPTIONS requests for CORS
 app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://www.townmanor.ai');
+  res.setHeader('Access-Control-Allow-Origin', 'https://www.townmanor.ai');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.sendStatus(200);
