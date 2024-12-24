@@ -45,20 +45,27 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
     cc: 'ravindranathjha75@gmail.com',
     subject: 'Welcome to TownManor! Please Verify Your Email',
     text: `
-      Hi ${name_surname},
+       Hi ${name_surname},
 
-      Welcome to TownManor! We're excited to have you join our platform. You're just one step away from becoming a part of our amazing team!
+      Welcome to TownManor! We're so excited to have you as part of our growing proptech community. You’ve made an excellent choice, and we’re here to help you every step of the way.
 
-      To complete your registration, please verify your email address by clicking the link below:
+      Before we get started, let’s confirm a few details:
+      
+      - **Username**: ${username}
+      - **Phone Number**: ${phone}
+      - **Address**: ${address}
+      - **Email**: ${email}
 
-      https://townmanor.ai/api/api/users/verify/${token}
+      You’re just one step away from accessing all the fantastic features TownManor has to offer! Please verify your email by clicking the link below:
 
-      Once you verify your email, you can log in with your username and password on our login page: 
-      https://www.townmanor.ai/auth
+      [Verify Your Email](https://townmanor.ai/api/api/users/verify/${token})
 
-      We can't wait to have you on board!
+      After verifying your email, you can log in with your username and password on our login page: 
+      [Login to TownManor](https://www.townmanor.ai/auth)
 
-      Best regards,
+      We can’t wait to have you fully on board and to help you explore everything TownManor has in store. If you have any questions or need assistance, feel free to reach out to us at any time.
+
+      Warm regards,
       The TownManor Team
     `,
   };
