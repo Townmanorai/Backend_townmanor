@@ -42,7 +42,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
   const mailOptions = {
     from: 'sales@townmanor.in', // Sender email address
     to: email, // Recipient email address
-    cc: 'ravindranathjha75@gmail.com',
+    cc: 'rjha@townmanor.in',
     subject: 'Welcome to TownManor! Please Verify Your Email',
     text: `
        Hi ${name_surname},
