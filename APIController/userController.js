@@ -135,11 +135,8 @@ export const verifyEmail = async (req, res) => {
       return res.status(400).json({ message: 'Invalid or expired token' });
     }
 
-    // After successful verification, inform the user and redirect them to the login page
-    return res.status(200).json({
-      message: 'Email verified successfully! You can now log in.',
-      redirectUrl: 'https://www.townmanor.ai/auth'  // You can also handle this in the frontend if needed
-    });
+    // After successful verification, redirect the user to the desired URL
+    return res.redirect(302, 'https://www.townmanor.ai/auth');  // Send HTTP redirect to the login page
   } catch (err) {
     console.error("Email Verification Error: ", err);
     return res.status(500).json({ message: 'Internal server error. Please try again later.' });

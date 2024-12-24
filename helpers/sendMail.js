@@ -51,7 +51,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
 
       To complete your registration, please verify your email address by clicking the link below:
 
-      https://townmanor.ai/api/verify/${token}
+      https://townmanor.ai/api/api/users/verify/${token}
 
       Once you verify your email, you can log in with your username and password on our login page: 
       https://www.townmanor.ai/auth
