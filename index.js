@@ -21,6 +21,7 @@ import userplanslimit from './APIController/userplanslimit.js';
 import propertyLeadRoutes from './APIController/propertyLeadRoutes.js';
 import propertyRoutesroute from './routes/propertyRoutes.js'
 import commercialRoutes from './routes/commercialRoutes.js';
+import loanRoutes from './APIController/loanRoutes.js';
 
 
  
@@ -92,6 +93,7 @@ app.use(propertyLeadRoutes);
 app.use('/api/properties', propertyRoutesroute);
 
 app.use('/api/commercial', commercialRoutes);
+app.use('/api', loanRoutes);
 
 // Start server
 const PORT = 3030;
