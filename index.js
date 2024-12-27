@@ -22,6 +22,7 @@ import propertyLeadRoutes from './APIController/propertyLeadRoutes.js';
 import propertyRoutesroute from './routes/propertyRoutes.js'
 import commercialRoutes from './routes/commercialRoutes.js';
 import loanRoutes from './APIController/loanRoutes.js';
+import favouriteRoute from './APIController/favouriteRoute.js';
 
 
  
@@ -94,6 +95,7 @@ app.use('/api/properties', propertyRoutesroute);
 
 app.use('/api/commercial', commercialRoutes);
 app.use('/api', loanRoutes);
+app.use('/api', favouriteRoute);
 
 // Start server
 const PORT = 3030;
