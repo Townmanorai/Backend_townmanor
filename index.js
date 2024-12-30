@@ -4,11 +4,14 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import userRoutes from './routes/userRoutes.js';
 import db from './config/db.js';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import fs from 'fs';
+
+// Import routes
+import userRoutes from './routes/userRoutes.js';
 import agentRoutes from './APIController/agentRoutes.js';
 import propertyRoutes from './APIController/propertyRoutes.js';
 import oldPropertyroute from './APIController/oldPropertyroute.js';
@@ -50,6 +53,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));  // To handle URL-encoded data
 app.use(express.static('public'));
+app.use('/files', express.static(path.join(__dirname, 'files'))); 
 
 app.use(session({
   secret: 'JWT_SECRET',
@@ -58,7 +62,7 @@ app.use(session({
 }));
 
 // Ensure the uploads folder exists
-import fs from 'fs';
+
 const uploadsDir = path.join(__dirname, 'public/images');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
