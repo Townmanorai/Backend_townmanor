@@ -26,6 +26,7 @@ import propertyRoutesroute from './routes/propertyRoutes.js'
 import commercialRoutes from './routes/commercialRoutes.js';
 import loanRoutes from './APIController/loanRoutes.js';
 import favoritesRoutes from './APIController/favoritesRoutes.js';
+import imageuploadcontroller from './APIController/imageuploadcontroller.js';
 
 
 
@@ -101,6 +102,11 @@ app.use('/api/properties', propertyRoutesroute);
 app.use('/api/commercial', commercialRoutes);
 app.use('/api', loanRoutes);
 app.use('/api', favoritesRoutes);
+
+//files upload
+
+app.use('/image',imageuploadcontroller);
+
 
 // Start server
 const PORT = 3030;
