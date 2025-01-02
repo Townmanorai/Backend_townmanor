@@ -61,7 +61,7 @@ router.post('/addproperty', (req, res) => {
     metro, school, hospital, mall, restaurant, bus, cinema, country, JSON.stringify(image_repository),JSON.stringify(floorplan), lat, lng, JSON.stringify(one_image_location), purpose,residential,commercail,leased,
     JSON.stringify(FeaturedAgentsId), JSON.stringify(AgentsOnSpotlightId), Listed_By, type, created_on, updated_on, status];
 
-    console.log(values);
+    // console.log(values);
 
   db.query(sql, values, (err, results) => {
     if (err) {
@@ -227,7 +227,7 @@ router.put('/property/agents/:id', async (req, res) => {
   const fieldToUpdate = Object.keys(body)[0]; // 'FeaturedAgentsId' or 'AgentsOnSpotlightId'
   let newAgentIds = body[fieldToUpdate]; // Get the value of the corresponding field
 
-  console.log("Updating field:", fieldToUpdate, "with value:", newAgentIds);
+  // console.log("Updating field:", fieldToUpdate, "with value:", newAgentIds);
 
   // Ensure newAgentIds is an array of strings
   newAgentIds = Array.isArray(newAgentIds) ? newAgentIds : [newAgentIds];
@@ -248,7 +248,7 @@ router.put('/property/agents/:id', async (req, res) => {
     // Merge existing and new agent IDs, removing any duplicates
     const updatedValue = [...new Set([...existingAgentIds, ...newAgentIds])];
 
-    console.log(`Final merged array for ${fieldToUpdate}:`, updatedValue);
+    // console.log(`Final merged array for ${fieldToUpdate}:`, updatedValue);
 
     const sql = `UPDATE property_details SET ${fieldToUpdate} = ? WHERE id = ?`;
     db.query(sql, [JSON.stringify(updatedValue), id], (err, result) => {
@@ -280,16 +280,16 @@ router.delete('/property/:id', (req, res) => {
 
 
 function parseSearchValues(searchValues) {
-  console.log("Input searchValues:", searchValues);  // Log the input
+  // console.log("Input searchValues:", searchValues);  // Log the input
 
   // Adjusted regex pattern to match the provided input format
   const pattern = /id:\s*(\d+),\s*(Sector\s[\d,]+)\s*Rd,\s*([\w\s]+),\s*(Sector\s[\d,]+,\s*Noida)\s*(.+?)\s*-?\s*India\s*-\s*(commercial|apartment|farm\s*house|office)\s*(Ready-to-move|Under-Construction)\s*(UPRERAPRJ[\w\d\s,]+)\s*(Commercial|Office|Apartment|Farm\s*House)\s*(India)\s*(Noida)\s*(\d+-\d+)\s*-\s*(\d+[A-Za-z]+\s*-\s*\d+[A-Za-z]+)?\s*(\d+)\s*SKIP_ON_EMPTY\s*((true\w+\s*)+)\s*([\d.]+)\s*([\d.]+)\s*([\d.]+)\s*([\d.]+)/;
 
-  console.log("Regex pattern result:", pattern); 
+  // console.log("Regex pattern result:", pattern); 
 
   const match = searchValues.match(pattern);
 
-  console.log("Regex match result:", match);  // Log the match result
+  // console.log("Regex match result:", match);  // Log the match result
 
   if (match) {
       // Extract the locality from the address (e.g., "Sector 137, Noida")
@@ -297,7 +297,7 @@ function parseSearchValues(searchValues) {
       const localityMatch = match[2].match(localityRegex);
       const locality = localityMatch ? localityMatch[0] : "Unknown Locality";
 
-      console.log("Extracted locality:", locality);  // Log the extracted locality
+      // console.log("Extracted locality:", locality);  // Log the extracted locality
 
       return {
           id: match[1],
@@ -333,9 +333,9 @@ function parseSearchValues(searchValues) {
 // Route to handle parsing and inserting
 router.post('/insert-property', (req, res) => {
     const { search_values } = req.body;
- console.log("search_values", search_values);
+//  console.log("search_values", search_values);
     const parsedData = parseSearchValues(search_values);
-    console.log("parsedData", parsedData);
+    // console.log("parsedData", parsedData);
 
     if (!parsedData) {
         return res.status(400).json({ error: 'Failed to parse search values' });

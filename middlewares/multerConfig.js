@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
     const uploadFolder = req.body.uploadFolder || 'files/ownproimages'; // Default to 'files/ownproimages'
     const uploadPath = path.join(__dirname, '..', uploadFolder);
     ensureDirectoryExists(uploadPath); // Ensure directory exists
-    console.log('Uploading to:', uploadPath); // Log the upload path
+    // console.log('Uploading to:', uploadPath); // Log the upload path
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {

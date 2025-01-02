@@ -79,14 +79,14 @@ router.post('/upload-commercial-images', (req, res) => {
 router.post('/upload', (req, res) => {
   // Retrieve the upload folder from the request body or default to 'files/ownproimages'
   const uploadFolder = req.body.uploadFolder?.trim() || 'files/ownproimages';
-  console.log('Parsed uploadFolder:', uploadFolder);
+  // console.log('Parsed uploadFolder:', uploadFolder);
 
   // Resolve the full path for the upload folder
   const uploadPath = path.join(__dirname, '..', uploadFolder);
 
   // Ensure the directory exists
   ensureDirectoryExists(uploadPath);
-  console.log('Resolved Upload Path:', uploadPath);
+  // console.log('Resolved Upload Path:', uploadPath);
 
   // Dynamic storage configuration for multer
   const storage = multer.diskStorage({
@@ -95,7 +95,7 @@ router.post('/upload', (req, res) => {
       const dynamicUploadPath = path.join(__dirname, '..', dynamicUploadFolder);
 
       ensureDirectoryExists(dynamicUploadPath); // Ensure directory exists dynamically
-      console.log('Dynamic Upload Path:', dynamicUploadPath); // Debugging
+      // console.log('Dynamic Upload Path:', dynamicUploadPath); // Debugging
       cb(null, dynamicUploadPath); // Set dynamic path
     },
     filename: (req, file, cb) => {
@@ -113,8 +113,8 @@ router.post('/upload', (req, res) => {
       return res.status(500).json({ error: 'Server error.' });
     }
   
-    console.log('Received body:', req.body); // Debugging
-    console.log('Uploaded files:', req.files); // Debugging
+    // console.log('Received body:', req.body); // Debugging
+    // console.log('Uploaded files:', req.files); // Debugging
   
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: 'No files were uploaded.' });
