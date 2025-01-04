@@ -34,6 +34,8 @@ router.post('/favorites', (req, res) => {
 });
 
 
+
+
 // Get all favorite properties for a user
 router.get('/favorites/:username', (req, res) => {
     const { username } = req.params;
