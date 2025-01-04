@@ -7,25 +7,43 @@ const router = express.Router();
 router.post('/favorites', (req, res) => {
     const { username, property_id } = req.body;
 
-    const sql = `
+    const checkSql = 'SELECT * FROM user_favorites WHERE username = ? AND property_id = ?';
+    const insertSql = `
         INSERT INTO user_favorites (username, property_id, created_at)
         VALUES (?, ?, NOW())
     `;
-    const values = [username, property_id];
-    db.query(sql, values, (err) => {
+
+    db.query(checkSql, [username, property_id], (err, results) => {
         if (err) {
-            console.error('Database error while adding to favorites:', err);
-            return res.status(500).json({ error: 'Failed to add property to favorites.' });
+            console.error('Database error while checking favorites:', err);
+            return res.status(500).json({ error: 'Failed to check favorite properties.' });
         }
-        res.status(201).json({ message: 'Property added to favorites successfully.' });
+
+        if (results.length > 0) {
+            return res.status(409).json({ message: 'Property already in favorites.' });
+        }
+
+        db.query(insertSql, [username, property_id], (err) => {
+            if (err) {
+                console.error('Database error while adding to favorites:', err);
+                return res.status(500).json({ error: 'Failed to add property to favorites.' });
+            }
+            res.status(201).json({ message: 'Property added to favorites successfully.' });
+        });
     });
 });
+
 
 // Get all favorite properties for a user
 router.get('/favorites/:username', (req, res) => {
     const { username } = req.params;
 
-    const sql = 'SELECT property_id FROM user_favorites WHERE username = ?';
+    const sql = `
+        SELECT DISTINCT property_id 
+        FROM user_favorites 
+        WHERE username = ?
+    `;
+
     db.query(sql, [username], (err, results) => {
         if (err) {
             console.error('Database error while fetching favorites:', err);
@@ -34,6 +52,7 @@ router.get('/favorites/:username', (req, res) => {
         res.status(200).json(results);
     });
 });
+
 
 // Remove a property from favorites
 router.delete('/favorites', (req, res) => {
