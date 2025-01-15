@@ -25,6 +25,9 @@ import propertyLeadRoutes from './APIController/propertyLeadRoutes.js';
 import propertyRoutesroute from './routes/propertyRoutes.js'
 import commercialRoutes from './routes/commercialRoutes.js';
 import loanRoutes from './APIController/loanRoutes.js';
+import homeInsuranceRoute from './APIController/homeInsuranceRoute.js';
+import homeInteriorRoute from './APIController/homeInteriorRoute.js';
+import homeShiftRoute from './APIController/homeShiftRoute.js';
 import favoritesRoutes from './APIController/favoritesRoutes.js';
 import imageuploadcontroller from './APIController/imageuploadcontroller.js';
 import awssimageuploadcontroller from './APIController/awssimageuploadcontroller.js';
@@ -102,6 +105,9 @@ app.use('/api/properties', propertyRoutesroute);
 
 app.use('/api/commercial', commercialRoutes);
 app.use('/api', loanRoutes);
+app.use('/api', homeInsuranceRoute);
+app.use('/api', homeInteriorRoute);
+app.use('/api', homeShiftRoute);
 app.use('/api', favoritesRoutes);
 
 //files upload

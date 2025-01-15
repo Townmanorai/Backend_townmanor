@@ -1,12 +1,12 @@
 import express from 'express';
 import multer from 'multer';
-import s3 from '../config/aws.js'; // Import S3 configuration
+import s3 from '../config/aws.js'; 
 import path from 'path';
 
 const router = express.Router();
 
 // Multer configuration
-const storage = multer.memoryStorage(); // Use memory storage for S3 uploads
+const storage = multer.memoryStorage(); 
 const upload = multer({ storage });
 
 // Upload endpoint
@@ -33,7 +33,7 @@ router.post('/upload-to-s3', upload.single('image'), async (req, res) => {
 
     res.status(200).json({
       message: 'File uploaded successfully!',
-      fileUrl: data.Location, // Public URL of the file
+      fileUrl: data.Location, 
     });
   } catch (error) {
     console.error('S3 Upload Error:', error);
@@ -55,18 +55,18 @@ router.post('/aws-upload-owner-images', upload.array('images', 10), async (req, 
 
       const params = {
         Bucket: 'townamnor.ai', // Your S3 bucket name
-        Key: fileName, // Upload path (including the folder)
+        Key: fileName, 
         Body: fileContent,
         ContentType: file.mimetype,
       };
 
       const data = await s3.upload(params).promise(); // Upload to S3
-      return data.Location; // Return the S3 URL of the uploaded file
+      return data.Location; 
     }));
 
     res.status(200).json({
       message: 'Files uploaded successfully!',
-      fileUrls: uploadedFiles, // List of URLs of uploaded files
+      fileUrls: uploadedFiles, 
     });
   } catch (error) {
     console.error('S3 Upload Error:', error);
@@ -87,18 +87,18 @@ router.post('/aws-upload-commercial-images', upload.array('images', 10), async (
 
       const params = {
         Bucket: 'townamnor.ai', // Your S3 bucket name
-        Key: fileName, // Upload path (including the folder)
+        Key: fileName, 
         Body: fileContent,
         ContentType: file.mimetype,
       };
 
       const data = await s3.upload(params).promise(); // Upload to S3
-      return data.Location; // Return the S3 URL of the uploaded file
+      return data.Location; 
     }));
 
     res.status(200).json({
-      message: 'Files uploaded successfully!',
-      fileUrls: uploadedFiles, // List of URLs of uploaded files
+      message: 'Files uploaded on commercial-images successfully!',
+      fileUrls: uploadedFiles, 
     });
   } catch (error) {
     console.error('S3 Upload Error:', error);
@@ -109,7 +109,7 @@ router.post('/aws-upload-commercial-images', upload.array('images', 10), async (
 // Route: Upload to Custom Directory (Dynamic folder name from request body)
 router.post('/aws-upload', upload.array('files', 10), async (req, res) => {
   try {
-    const uploadFolder = req.body.uploadFolder?.trim() || 'ownproimages'; // Default folder name if not provided
+    const uploadFolder = req.body.uploadFolder?.trim() || 'owner-images'; 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: 'No files were uploaded.' });
     }
@@ -120,18 +120,18 @@ router.post('/aws-upload', upload.array('files', 10), async (req, res) => {
 
       const params = {
         Bucket: 'townamnor.ai', // Your S3 bucket name
-        Key: fileName, // Upload path (including the folder)
+        Key: fileName, 
         Body: fileContent,
         ContentType: file.mimetype,
       };
 
       const data = await s3.upload(params).promise(); // Upload to S3
-      return data.Location; // Return the S3 URL of the uploaded file
+      return data.Location; 
     }));
 
     res.status(200).json({
       message: 'Files uploaded successfully!',
-      fileUrls: uploadedFiles, // List of URLs of uploaded files
+      fileUrls: uploadedFiles, 
     });
   } catch (error) {
     console.error('S3 Upload Error:', error);
