@@ -45,11 +45,11 @@ export const createProperty = (req, res) => {
     }
   );
 };
-// Get property by ID
+// Get all property 
 export const getAllProperty = (req, res) => {
 
   db.query(
-    'SELECT * FROM owner_property WHERE status != 0',
+    'SELECT * FROM owner_property WHERE status = 1',
     (err, results) => {
       if (err) {
         return res.status(500).json({ error: 'Error fetching property', details: err });
