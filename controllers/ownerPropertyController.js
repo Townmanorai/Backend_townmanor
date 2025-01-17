@@ -57,7 +57,7 @@ export const getAllProperty = (req, res) => {
       if (results.length === 0) {
         return res.status(404).json({ error: 'Property not found' });
       }
-      res.status(200).json(results[0]);
+      res.status(200).json(results);
     }
   );
 };
