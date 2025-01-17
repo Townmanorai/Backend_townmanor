@@ -31,6 +31,8 @@ import homeShiftRoute from './APIController/homeShiftRoute.js';
 import favoritesRoutes from './APIController/favoritesRoutes.js';
 import imageuploadcontroller from './APIController/imageuploadcontroller.js';
 import awssimageuploadcontroller from './APIController/awssimageuploadcontroller.js';
+import ownerPropertyRoutes from './routes/ownerPropertyRoutes.js';
+
 
 
 
@@ -109,6 +111,9 @@ app.use('/api', homeInsuranceRoute);
 app.use('/api', homeInteriorRoute);
 app.use('/api', homeShiftRoute);
 app.use('/api', favoritesRoutes);
+
+// Route for owner property APIs
+app.use('/owner-property', ownerPropertyRoutes);
 
 //files upload
 
