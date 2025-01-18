@@ -150,3 +150,46 @@ export const deleteProperty = (req, res) => {
     }
   );
 };
+
+
+// Get all properties with optional filters
+//http://localhost:3030/properties
+//http://localhost:3030/properties?city=Gurugram
+//http://localhost:3030/properties?city=Gurugram&configuration=3BHK
+//http://localhost:3030/properties?city=Gurugram&furnish_type=Furnished&construction_status=Ready
+//http://localhost:3030/properties?city=Gurugram&configuration=3BHK&furnish_type=Furnished&construction_status=Ready
+
+
+export const getAllPropertyByFilter = (req, res) => {
+  const { city, configuration, furnish_type, construction_status } = req.query;
+  let sql = 'SELECT * FROM owner_property WHERE status= 1';
+  const filters = [];
+
+  if (city) {
+    sql += ' AND city = ?';
+    filters.push(city);
+  }
+
+  if (configuration) {
+    sql += ' AND configuration = ?';
+    filters.push(configuration);
+  }
+
+  if (furnish_type) {
+    sql += ' AND furnish_type = ?';
+    filters.push(furnish_type);
+  }
+
+  if (construction_status) {
+    sql += ' AND construction_status = ?';
+    filters.push(construction_status);
+  }
+
+  db.query(sql, filters, (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(err);
+    }
+    res.status(200).json(results);
+  });
+};
