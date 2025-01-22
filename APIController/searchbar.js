@@ -51,7 +51,7 @@ router.get('/searchproperties', (req, res) => {
     category
   } = req.query;
 
-  let sql = 'SELECT * FROM property_details WHERE 1=1';
+  let sql = 'SELECT * FROM owner_property WHERE 1=1';
   const filters = [];
 
   // Add conditions for each field
@@ -107,8 +107,8 @@ router.get('/searchproperties', (req, res) => {
   }
 
   // Debugging logs
-  console.log('SQL Query:', sql);
-  console.log('Filters:', filters);
+  // console.log('SQL Query:', sql);
+  // console.log('Filters:', filters);
 
   // Execute the query with the applied filters
   db.query(sql, filters, (err, results) => {
