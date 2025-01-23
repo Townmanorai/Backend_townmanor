@@ -14,9 +14,9 @@ router.get('/userpackage', (req, res) => {
       }
       res.status(200).json(results);
     });
-  });
+});
 
-  router.get('/userpackage/:username', (req, res) => {
+router.get('/userpackage/:username', (req, res) => {
     const username = req.params.username;
     const sql = 'SELECT * FROM townmanor.user_dashboard WHERE username = ?';
 
@@ -73,8 +73,11 @@ router.put('/userpackage/:username', (req, res) => {
             if (my_inquiries) {
                 existingMyInquiries = existingMyInquiries.concat(my_inquiries);
             }
+            // Handle propertylisting correctly, ensure it's an array of strings
             if (propertylisting) {
-                const newListings = JSON.parse(propertylisting);
+                let newListings = Array.isArray(propertylisting) ? propertylisting : [propertylisting];
+                // Ensure all new listings are strings, then append
+                newListings = newListings.map(item => String(item));
                 existingPropertyListing = existingPropertyListing.concat(newListings);
             }
 
