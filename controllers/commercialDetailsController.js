@@ -49,12 +49,12 @@ export const getCommercialDetailsByCity = (req, res) => {
 
 // POST new commercial details
 export const createCommercialDetail = (req, res) => {
-  const { project_name, city, address, invest, category, return_policy, possession_date, builder, construction_status, project_unit, latitude, longitude, description, rera_id, project_area_range, video_id, amenities, distance, image_banner, face_image, floorplan, main_image, office_image, retail_shop, restaurant, other } = req.body;
+  const { project_name, city, address, invest, category, return_policy, possession_date, builder, construction_status, project_unit, lat, lng, description, rera_id, project_area_range, video_id, amenities, distance, image_banner, face_image, floorplan, main_image, office_image, retail_shop, restaurant, other } = req.body;
   
   db.query(
-    `INSERT INTO commercial_details (project_name, city, address, invest, category, return_policy, possession_date, builder, construction_status, project_unit, latitude, longitude, description, rera_id, project_area_range, video_id, amenities, distance, image_banner, face_image, floorplan, main_image, office_image, retail_shop, restaurant, other)
+    `INSERT INTO commercial_details (project_name, city, address, invest, category, return_policy, possession_date, builder, construction_status, project_unit, lat, lng, description, rera_id, project_area_range, video_id, amenities, distance, image_banner, face_image, floorplan, main_image, office_image, retail_shop, restaurant, other)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [project_name, city, address, invest, JSON.stringify(category), return_policy, possession_date, builder, construction_status, project_unit, latitude, longitude, description, rera_id, project_area_range, video_id, JSON.stringify(amenities), JSON.stringify(distance), image_banner, face_image, JSON.stringify(floorplan), JSON.stringify(main_image), JSON.stringify(office_image), JSON.stringify(retail_shop), JSON.stringify(restaurant), JSON.stringify(other)],
+    [project_name, city, address, invest, JSON.stringify(category), return_policy, possession_date, builder, construction_status, project_unit, lat, lng, description, rera_id, project_area_range, video_id, JSON.stringify(amenities), JSON.stringify(distance), image_banner, face_image, JSON.stringify(floorplan), JSON.stringify(main_image), JSON.stringify(office_image), JSON.stringify(retail_shop), JSON.stringify(restaurant), JSON.stringify(other)],
     (err, results) => {
       if (err) {
         return res.status(500).json({ error: 'Error creating commercial detail', details: err });
@@ -67,11 +67,11 @@ export const createCommercialDetail = (req, res) => {
 // PUT (update) commercial details by ID
 export const updateCommercialDetail = (req, res) => {
   const { id } = req.params;
-  const { project_name, city, address, invest, category, return_policy, possession_date, builder, construction_status, project_unit, latitude, longitude, description, rera_id, project_area_range, video_id, amenities, distance, image_banner, face_image, floorplan, main_image, office_image, retail_shop, restaurant, other } = req.body;
+  const { project_name, city, address, invest, category, return_policy, possession_date, builder, construction_status, project_unit, lat, lng, description, rera_id, project_area_range, video_id, amenities, distance, image_banner, face_image, floorplan, main_image, office_image, retail_shop, restaurant, other } = req.body;
 
   db.query(
-    `UPDATE commercial_details SET project_name = ?, city = ?, address = ?, invest = ?, category = ?, return_policy = ?, possession_date = ?, builder = ?, construction_status = ?, project_unit = ?, latitude = ?, longitude = ?, description = ?, rera_id = ?, project_area_range = ?, video_id = ?, amenities = ?, distance = ?, image_banner = ?, face_image = ?, floorplan = ?, main_image = ?, office_image = ?, retail_shop = ?, restaurant = ?, other = ? WHERE id = ?`,
-    [project_name, city, address, invest, JSON.stringify(category), return_policy, possession_date, builder, construction_status, project_unit, latitude, longitude, description, rera_id, project_area_range, video_id, JSON.stringify(amenities), JSON.stringify(distance), image_banner, face_image, JSON.stringify(floorplan), JSON.stringify(main_image), JSON.stringify(office_image), JSON.stringify(retail_shop), JSON.stringify(restaurant), JSON.stringify(other), id],
+    `UPDATE commercial_details SET project_name = ?, city = ?, address = ?, invest = ?, category = ?, return_policy = ?, possession_date = ?, builder = ?, construction_status = ?, project_unit = ?, lat = ?, lng = ?, description = ?, rera_id = ?, project_area_range = ?, video_id = ?, amenities = ?, distance = ?, image_banner = ?, face_image = ?, floorplan = ?, main_image = ?, office_image = ?, retail_shop = ?, restaurant = ?, other = ? WHERE id = ?`,
+    [project_name, city, address, invest, JSON.stringify(category), return_policy, possession_date, builder, construction_status, project_unit, lat, lng, description, rera_id, project_area_range, video_id, JSON.stringify(amenities), JSON.stringify(distance), image_banner, face_image, JSON.stringify(floorplan), JSON.stringify(main_image), JSON.stringify(office_image), JSON.stringify(retail_shop), JSON.stringify(restaurant), JSON.stringify(other), id],
     (err, results) => {
       if (err) {
         return res.status(500).json({ error: 'Error updating commercial detail', details: err });
