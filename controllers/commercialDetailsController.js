@@ -53,7 +53,7 @@ export const createCommercialDetail = (req, res) => {
   
   db.query(
     `INSERT INTO commercial_details (project_name, city, address, invest, category, return_policy, possession_date, builder, construction_status, project_unit, lat, lng, description, rera_id, project_area_range, video_id, amenities, distance, image_banner, face_image, floorplan, main_image, office_image, retail_shop, restaurant, other)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [project_name, city, address, invest, JSON.stringify(category), return_policy, possession_date, builder, construction_status, project_unit, lat, lng, description, rera_id, project_area_range, video_id, JSON.stringify(amenities), JSON.stringify(distance), image_banner, face_image, JSON.stringify(floorplan), JSON.stringify(main_image), JSON.stringify(office_image), JSON.stringify(retail_shop), JSON.stringify(restaurant), JSON.stringify(other)],
     (err, results) => {
       if (err) {
