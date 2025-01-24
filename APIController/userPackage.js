@@ -1,7 +1,7 @@
 import express from 'express';
 import upload from '../middlewares/multerConfig.js';
 import db from '../config/db.js';
-
+import moment from 'moment-timezone'; 
 
 const router = express.Router();
 
@@ -111,6 +111,98 @@ router.put('/userpackage/:username', (req, res) => {
         }
     });
 });
+
+router.post('/userpackage/:username', (req, res) => {
+    const username = req.params.username;
+
+    // Calculate expiry date: current date + 1 month
+    const expiryDate = moment().add(1, 'months').format('YYYY-MM-DD HH:mm:ss');
+
+    // Default package data
+    const defaultPackageJson = [
+        {
+            "id": 1,
+            "name": "Free",
+            "price": "0 INR",
+            "expiry": expiryDate,
+            "daysLimit": "30",
+            "featuredLimit": 1,
+            "listingsLimit": 1
+        }
+    ];
+
+    // Other fields set to null
+    const defaultSubscriptionHistory = null;
+    const defaultMyResearch = null;
+    const defaultMyFavorites = null;
+    const defaultMyInquiries = null;
+    const defaultPropertyListing = null;
+
+    // Insert new data into the database for the given username
+    const sqlInsert = `
+        INSERT INTO townmanor.user_dashboard (username, package_json, subscription_history, my_research, my_favorites, my_inquiries, propertylisting)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    // Insert the default values into the database
+    db.query(
+        sqlInsert,
+        [
+            username,
+            JSON.stringify(defaultPackageJson),
+            JSON.stringify(defaultSubscriptionHistory),
+            JSON.stringify(defaultMyResearch),
+            JSON.stringify(defaultMyFavorites),
+            JSON.stringify(defaultMyInquiries),
+            JSON.stringify(defaultPropertyListing),
+        ],
+        (insertErr, result) => {
+            if (insertErr) {
+                console.error('Database error:', insertErr);
+                return res.status(500).json({ message: 'Error inserting data', error: insertErr });
+            }
+            res.status(201).json({ message: 'Data created successfully', result });
+        }
+    );
+});
+
+// router.post('/userpackage/:username', (req, res) => {
+//     const username = req.params.username;
+//     const { package_json, subscription_history, my_research, my_favorites, my_inquiries, propertylisting } = req.body;
+
+//     // Check if required fields are provided in the request body
+//     if (!package_json || !subscription_history || !my_research || !my_favorites || !my_inquiries || !propertylisting) {
+//         return res.status(400).json({ message: 'Missing required fields' });
+//     }
+
+//     // Insert new data into the database for the given username
+//     const sqlInsert = `
+//         INSERT INTO townmanor.user_dashboard (username, package_json, subscription_history, my_research, my_favorites, my_inquiries, propertylisting)
+//         VALUES (?, ?, ?, ?, ?, ?, ?)
+//     `;
+
+//     // Ensure all fields are correctly formatted as strings (if needed)
+//     db.query(
+//         sqlInsert,
+//         [
+//             username,
+//             JSON.stringify(package_json),
+//             JSON.stringify(subscription_history),
+//             JSON.stringify(my_research),
+//             JSON.stringify(my_favorites),
+//             JSON.stringify(my_inquiries),
+//             JSON.stringify(propertylisting),
+//         ],
+//         (insertErr, result) => {
+//             if (insertErr) {
+//                 console.error('Database error:', insertErr);
+//                 return res.status(500).json({ message: 'Error inserting data', error: insertErr });
+//             }
+//             res.status(201).json({ message: 'Data created successfully', result });
+//         }
+//     );
+// });
+
 
 
 // Insert a new package for a user
