@@ -12,22 +12,22 @@ export const getAllProperties = (req, res) => {
   });
 };
 
-// Add a new property
-export const addProperty = (req, res) => {
-  const { city, locality, property_name, address, price } = req.body;
-  const query = `
-    INSERT INTO property_details (city, locality, property_name, address, price)
-    VALUES (?, ?, ?, ?, ?);
-  `;
-  const values = [city, locality, property_name, address, price];
+// // Add a new property
+// export const addProperty = (req, res) => {
+//   const { city, locality, property_name, address, price } = req.body;
+//   const query = `
+//     INSERT INTO property_details (city, locality, property_name, address, price)
+//     VALUES (?, ?, ?, ?, ?);
+//   `;
+//   const values = [city, locality, property_name, address, price];
 
-  db.query(query, values, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: 'An error occurred while adding the property.' });
-    }
-    res.status(201).json({ id: results.insertId });
-  });
-};
+//   db.query(query, values, (err, results) => {
+//     if (err) {
+//       return res.status(500).json({ error: 'An error occurred while adding the property.' });
+//     }
+//     res.status(201).json({ id: results.insertId });
+//   });
+// };
 
 // Delete a property
 export const deleteProperty = (req, res) => {
@@ -196,6 +196,39 @@ export const getAdminProperties = (req, res) => {
       res.json(properties);
     }
   );
+};
+
+
+export const getAdminPropertiesByCity = (req, res) => {
+  const { city } = req.query;  // Read city filter from query parameters
+
+  let baseQuery = `
+    SELECT property_name, one_image_location,
+      COUNT(CASE WHEN type = 'agent' THEN 1 END) AS agentsCount,
+      COUNT(CASE WHEN type = 'owner' THEN 1 END) AS ownersCount
+    FROM property_details
+  `;
+  const queryParams = [];
+
+  // Add city filter if provided
+  if (city) {
+    baseQuery += ' WHERE city = ?';
+    queryParams.push(city);
+  }
+
+  // Group the results by property name and one_image_location
+  baseQuery += ' GROUP BY property_name, one_image_location';
+
+  // Execute the query
+  db.query(baseQuery, queryParams, (error, properties) => {
+    if (error) {
+      console.error('Error fetching properties:', error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+
+    // Send the properties in JSON format
+    res.json(properties);
+  });
 };
 
 

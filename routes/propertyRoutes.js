@@ -1,11 +1,14 @@
 // routes/propertyRoutes.js
 import express from 'express';
-import { getPropertyDetails, getAdminProperties,getRentalProperties } from '../controllers/propertyController.js';
+import { getPropertyDetails, getAdminProperties,getRentalProperties,getAdminPropertiesByCity } from '../controllers/propertyController.js';
 
 const router = express.Router();
 
 // Route to fetch all properties listed by admin
 router.get('/admin', getAdminProperties);
+
+// Route to fetch all properties listed by admin filter by city
+router.get('/adminbycity', getAdminPropertiesByCity);
 
 // Route to fetch all properties which is rental
 router.get('/rentalproperties', getRentalProperties);
