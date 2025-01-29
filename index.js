@@ -32,7 +32,8 @@ import favoritesRoutes from './APIController/favoritesRoutes.js';
 import imageuploadcontroller from './APIController/imageuploadcontroller.js';
 import awssimageuploadcontroller from './APIController/awssimageuploadcontroller.js';
 import ownerPropertyRoutes from './routes/ownerPropertyRoutes.js';
-
+import blogRoutes from './routes/blogRoutes.js';
+import articleRoutes from './routes/articleRoutes.js';
 
 
 
@@ -114,6 +115,10 @@ app.use('/api', favoritesRoutes);
 
 // Route for owner property APIs
 app.use('/owner-property', ownerPropertyRoutes);
+
+// Blog and Article Routes
+app.use('/blogs', blogRoutes);
+app.use('/articles', articleRoutes);
 
 //files upload
 
