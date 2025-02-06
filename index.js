@@ -29,6 +29,7 @@ import homeInsuranceRoute from './APIController/homeInsuranceRoute.js';
 import homeInteriorRoute from './APIController/homeInteriorRoute.js';
 import homeShiftRoute from './APIController/homeShiftRoute.js';
 import favoritesRoutes from './APIController/favoritesRoutes.js';
+import advertisementsRoute from './APIController/advertisementsRoute.js';
 import imageuploadcontroller from './APIController/imageuploadcontroller.js';
 import awssimageuploadcontroller from './APIController/awssimageuploadcontroller.js';
 import ownerPropertyRoutes from './routes/ownerPropertyRoutes.js';
@@ -100,6 +101,8 @@ app.use(userPackage)
 
 app.use(userplanslimit)
 
+app.use(advertisementsRoute)
+
 app.use('/api/users', userRoutes);
 
 app.use(propertyLeadRoutes); 
@@ -124,6 +127,8 @@ app.use('/articles', articleRoutes);
 
 app.use('/image',imageuploadcontroller);
 app.use('/image',awssimageuploadcontroller);
+
+
 
 // Start server
 const PORT = 3030;
