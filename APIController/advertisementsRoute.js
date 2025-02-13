@@ -24,11 +24,56 @@ router.get('/ads', (req, res) => {
   });
 });
 
+// Get advertisements by type
+router.get('/ads/type/:type', (req, res) => {
+  const { type } = req.params;
+  const sql = 'SELECT * FROM advertisements WHERE type = ?';
+  
+  db.query(sql, [type], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(err);
+    }
+    res.status(200).json(results);
+  });
+});
+
+
+// Toggle advertisement status between 'active' and 'inactive'
+router.put('/ads/toggle/:id', (req, res) => {
+  const { id } = req.params;
+  
+  // First, retrieve the current status of the advertisement
+  const selectSql = 'SELECT status FROM advertisements WHERE id = ?';
+  db.query(selectSql, [id], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(err);
+    }
+    if (results.length === 0) {
+      return res.status(404).send('Advertisement not found');
+    }
+    
+    const currentStatus = results[0].status;
+    // Toggle status: if active, then set to inactive; otherwise, set to active
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    
+    const updateSql = 'UPDATE advertisements SET status = ? WHERE id = ?';
+    db.query(updateSql, [newStatus, id], (err, updateResult) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).send(err);
+      }
+      res.json({ message: `Advertisement status updated to ${newStatus}`, status: newStatus });
+    });
+  });
+});
+
 // Create a new advertisement
 router.post('/ads', upload.array('files', 10), async (req, res) => {
-  console.log('Files upload received:', req.files);
+  // console.log('Files upload received:', req.files);
 
-  const { imgname, type, status } = req.body;
+  const { imgname, type, status, url } = req.body;
   const images = req.files;
 
   // Validate required fields
@@ -55,12 +100,12 @@ router.post('/ads', upload.array('files', 10), async (req, res) => {
       };
 
       const uploadResult = await s3.upload(params).promise();
-      uploadedImages.push(uploadResult.Location); // Store uploaded image URLs
+      uploadedImages.push(uploadResult.Location); 
     }
 
     // Insert advertisement into the database with image URLs
-    const sql = `INSERT INTO advertisements (imgname, type, status, imageUrl) VALUES (?, ?, ?, ?)`;
-    db.query(sql, [imgname, type, status, JSON.stringify(uploadedImages)], (err, result) => {
+    const sql = `INSERT INTO advertisements (imgname, type, status, imageUrl, url) VALUES (?, ?, ?, ?, ?)`;
+    db.query(sql, [imgname, type, status, JSON.stringify(uploadedImages), url], (err, result) => {
       if (err) {
         console.error('Error inserting into advertisements table:', err);
         return res.status(500).send('Error saving advertisement');
