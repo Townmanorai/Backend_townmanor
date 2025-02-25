@@ -6,7 +6,7 @@ import db from '../config/db.js';
 const router = express.Router();
 
 router.get('/property', (req, res) => {
-    const sql = 'SELECT * FROM property';
+    const sql = 'SELECT * FROM property_details';
     db.query(sql, (err, results) => {
       if (err) {
         console.error('Database error:', err);
