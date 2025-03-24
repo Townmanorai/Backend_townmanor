@@ -32,17 +32,17 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
     port: 465, // Use 465 for secure (SSL)
     secure: true, // SSL is true for port 465
     auth: {
-      user: 'rnjha@townmanor.in', // Your email
-      pass: 'Reem1234!', // Your password from environment variable
+      user: 'sales@townmanor.in', // Your email
+      pass: 'Townmanor1234!', // Your password from environment variable
     },
     logger: true, // Enable logging
     debug: true, // Enable debug mode
   });
 
   const mailOptions = {
-    from: 'rjha@townmanor.in', // Sender email address
+    from: 'sales@townmanor.in', // Sender email address
     to: email, // Recipient email address
-    cc: 'ravindranathjha75@gmail.com',
+    cc: 'rjha@townmanor.in',
     subject: 'Welcome to TownManor! Please Verify Your Email',
     text: `
        Hi ${name_surname},
