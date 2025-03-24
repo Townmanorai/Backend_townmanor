@@ -33,7 +33,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
     secure: true, // SSL is true for port 465
     auth: {
       user: 'sales@townmanor.in', // Your email
-      pass: 'Townmanor1234!', // Your password from environment variable
+      pass: 'Reem1234!', // Your password from environment variable
     },
     logger: true, // Enable logging
     debug: true, // Enable debug mode
