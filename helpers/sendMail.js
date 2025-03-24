@@ -32,7 +32,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
     port: 465, // Use 465 for secure (SSL)
     secure: true, // SSL is true for port 465
     auth: {
-      user: 'sales@townmanor.in', // Your email
+      user: 'rnjha@townmanor.in', // Your email
       pass: 'Reem1234!', // Your password from environment variable
     },
     logger: true, // Enable logging
@@ -40,9 +40,9 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
   });
 
   const mailOptions = {
-    from: 'sales@townmanor.in', // Sender email address
+    from: 'rjha@townmanor.in', // Sender email address
     to: email, // Recipient email address
-    cc: 'rjha@townmanor.in',
+    cc: 'ravindranathjha75@gmail.com',
     subject: 'Welcome to TownManor! Please Verify Your Email',
     text: `
        Hi ${name_surname},
