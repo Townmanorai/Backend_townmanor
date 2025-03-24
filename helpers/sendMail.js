@@ -54,10 +54,10 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
               margin: 0 auto;
               font-family: Arial, sans-serif;
               line-height: 1.6;
-              color: #333333;
+              color: #000000;
             }
             .header {
-              background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+              background: linear-gradient(to right, #ff4447, #8a2e2e);
               color: white;
               padding: 30px;
               text-align: center;
@@ -72,24 +72,25 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
             .button {
               display: inline-block;
               padding: 12px 24px;
-              background: #2a5298;
+              background: linear-gradient(to right, #ff4447, #8a2e2e);
               color: white !important;
               text-decoration: none;
               border-radius: 5px;
               margin: 20px 0;
               font-weight: bold;
+              transition: all 0.3s ease;
             }
             .details-box {
-              background: #f7f9fc;
+              background: #f8f8f8;
               padding: 20px;
               border-radius: 8px;
               margin: 20px 0;
-              border-left: 4px solid #2a5298;
+              border-left: 4px solid #ff4447;
             }
             .footer {
               text-align: center;
               margin-top: 30px;
-              color: #666666;
+              color: #000000;
               font-size: 14px;
             }
             .services-section {
@@ -103,11 +104,17 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
               margin: 20px 0;
             }
             .service-card {
-              background: #f8fafc;
+              background: #ffffff;
               border-radius: 10px;
               padding: 20px;
               text-align: left;
               border: 1px solid #e5e5e5;
+              transition: all 0.3s ease;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+            .service-card:hover {
+              border-color: #ff4447;
+              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
             .service-icon {
               width: 40px;
@@ -118,7 +125,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
               font-size: 16px;
               font-weight: bold;
               margin: 10px 0 5px;
-              color: #1e3c72;
+              color: #000000;
             }
             .service-description {
               font-size: 14px;
@@ -126,12 +133,19 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
               margin: 0;
             }
             .new-badge {
-              background: #ef4444;
+              background: #ff4447;
               color: white;
               padding: 2px 6px;
               border-radius: 12px;
               font-size: 12px;
               margin-left: 5px;
+            }
+            a {
+              color: #ff4447;
+              text-decoration: none;
+            }
+            a:hover {
+              text-decoration: underline;
             }
           </style>
         </head>
@@ -164,17 +178,17 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
               </center>
 
               <div class="services-section">
-                <h2>Explore Our Premium Services</h2>
+                <h2 style="color: #000000;">Explore Our Premium Services</h2>
                 <p>Discover the comprehensive suite of services we offer to make your property journey seamless:</p>
                 
                 <div class="services-grid">
                   <div class="service-card">
-                    <div style="color: #3B82F6">
+                    <div style="color: #ff4447">
                       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
                         <rect x="4" y="8" width="32" height="24" rx="4" fill="currentColor"/>
                         <path d="M4 16H36V20H4V16Z" fill="#ffffff"/>
-                        <circle cx="14" cy="26" r="4" fill="#10B981"/>
-                        <circle cx="26" cy="26" r="4" fill="#EF4444"/>
+                        <circle cx="14" cy="26" r="4" fill="#8a2e2e"/>
+                        <circle cx="26" cy="26" r="4" fill="#000000"/>
                       </svg>
                     </div>
                     <h3 class="service-title">Credit Score Check</h3>
@@ -182,7 +196,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
                   </div>
                   
                   <div class="service-card">
-                    <div style="color: #6EE7B7">
+                    <div style="color: #ff4447">
                       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
                         <path d="M8 6H28V14L32 18V34H8V6Z" fill="currentColor"/>
                         <path d="M12 18H24V22H12V18Z" fill="#ffffff"/>
@@ -193,7 +207,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
                   </div>
 
                   <div class="service-card">
-                    <div style="color: #F59E0B">
+                    <div style="color: #ff4447">
                       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
                         <path d="M20 4L4 16V36H36V16L20 4Z" fill="currentColor"/>
                         <path d="M16 20L20 24L28 16" stroke="#ffffff" stroke-width="2"/>
@@ -204,7 +218,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
                   </div>
 
                   <div class="service-card">
-                    <div style="color: #10B981">
+                    <div style="color: #ff4447">
                       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
                         <path d="M20 8L8 20V32H32V20L20 8Z" fill="currentColor"/>
                         <path d="M20 16V24" stroke="#ffffff" stroke-width="2"/>
@@ -216,7 +230,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
                 </div>
 
                 <center>
-                  <a href="https://www.townmanor.ai/services" class="button" style="background: #10B981;">
+                  <a href="https://www.townmanor.ai/services" class="button">
                     Explore All Services
                   </a>
                 </center>
@@ -224,7 +238,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
               
               <p>Once verified, you can access your account here:</p>
               <center>
-                <a href="https://www.townmanor.ai/auth" class="button" style="background: #28a745;">
+                <a href="https://www.townmanor.ai/auth" class="button">
                   Login to TownManor
                 </a>
               </center>
@@ -232,7 +246,7 @@ export const sendVerificationEmail = (username,name_surname,phone, address, emai
               <div class="footer">
                 <p>Need help? We're here for you!</p>
                 <p>Contact our support team at <a href="mailto:support@townmanor.in">support@townmanor.in</a></p>
-                <hr style="border-top: 1px solid #eee; margin: 20px 0;">
+                <hr style="border-top: 1px solid #e5e5e5; margin: 20px 0;">
                 <p>© 2024 TownManor | Your Trusted Property Management Partner</p>
               </div>
             </div>
