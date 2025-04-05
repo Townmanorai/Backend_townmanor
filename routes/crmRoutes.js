@@ -1,14 +1,27 @@
-const express = require('express');
+import express from 'express';
+import {
+  createTask,
+  getAllTasks,
+  getTaskById,
+  updateTask,
+  deleteTask
+} from '../controllers/crmController.js';
+
 const router = express.Router();
-const crmController = require('../controllers/crmController');
 
 // Create a new task
-router.post('/tasks', crmController.createTask);
+router.post('/tasks', createTask);
 
 // Get all tasks
-router.get('/tasks', crmController.getAllTasks);
+router.get('/tasks', getAllTasks);
 
-// Update task status
-router.put('/tasks/:id/status', crmController.updateTaskStatus);
+// Get a single task by ID
+router.get('/tasks/:id', getTaskById);
 
-module.exports = router; 
+// Update a task
+router.put('/tasks/:id', updateTask);
+
+// Delete a task (soft delete)
+router.delete('/tasks/:id', deleteTask);
+
+export default router; 

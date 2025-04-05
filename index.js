@@ -35,7 +35,7 @@ import awssimageuploadcontroller from './APIController/awssimageuploadcontroller
 import ownerPropertyRoutes from './routes/ownerPropertyRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
 import articleRoutes from './routes/articleRoutes.js';
-
+import crmRoutes from './routes/crmRoutes.js';
 
 
 
@@ -123,6 +123,7 @@ app.use('/owner-property', ownerPropertyRoutes);
 // Blog and Article Routes
 app.use('/blogs', blogRoutes);
 app.use('/articles', articleRoutes);
+app.use('/crm', crmRoutes);
 
 //files upload
 
