@@ -2,7 +2,15 @@ import db from '../config/db.js';
 
 // Create a new task
 export const createTask = (req, res) => {
-  const { title, description, status, assignee, priority, dueDate } = req.body;
+  const { title, description, status = 'pending', assignee, priority = 'medium', dueDate = null } = req.body;
+
+  // Validate required fields
+  if (!title || !description || !assignee) {
+    return res.status(400).json({ 
+      error: 'Missing required fields',
+      details: 'Title, description, and assignee are required'
+    });
+  }
 
   db.query(
     `INSERT INTO crm_tasks (title, description, status, assignee, priority, due_date) 
@@ -10,9 +18,18 @@ export const createTask = (req, res) => {
     [title, description, status, assignee, priority, dueDate],
     (err, results) => {
       if (err) {
-        return res.status(500).json({ error: 'Error creating task', details: err });
+        console.error('Database error:', err);
+        return res.status(500).json({ 
+          error: 'Error creating task', 
+          details: err.message,
+          code: err.code
+        });
       }
-      res.status(201).json({ message: 'Task created successfully', id: results.insertId });
+      res.status(201).json({ 
+        message: 'Task created successfully', 
+        id: results.insertId,
+        task: { title, description, status, assignee, priority, dueDate }
+      });
     }
   );
 };
