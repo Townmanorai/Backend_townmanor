@@ -35,7 +35,7 @@ import awssimageuploadcontroller from './APIController/awssimageuploadcontroller
 import ownerPropertyRoutes from './routes/ownerPropertyRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
 import articleRoutes from './routes/articleRoutes.js';
-import crmRoutes from './routes/crmRoutes.js';
+
 
 
 
@@ -89,7 +89,6 @@ app.use(agentRoutes);
 app.use(propertyRoutes);
 app.use(oldPropertyroute);
 app.use(searchbar)
-app.use(crmRoutes);
 
 // Use PayU routes
 app.use(payuRoutes);
