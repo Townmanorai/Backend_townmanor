@@ -5,7 +5,9 @@ import {
   getTaskById,
   updateTask,
   deleteTask,
-  updateTaskStatus
+  updateTaskStatus,
+  getAnalyticsOverview,
+  getAssigneeStats
 } from '../controllers/crmController.js';
 
 const router = express.Router();
@@ -27,5 +29,9 @@ router.put('/tasks/:id/status', updateTaskStatus);
 
 // Delete a task (soft delete)
 router.delete('/tasks/:id', deleteTask);
+
+// Add to crmRoutes.js
+router.get('/analytics/overview', getAnalyticsOverview);
+router.get('/analytics/assignee-stats', getAssigneeStats);
 
 export default router; 

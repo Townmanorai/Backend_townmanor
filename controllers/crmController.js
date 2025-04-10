@@ -210,3 +210,44 @@ export const updateTaskStatus = (req, res) => {
     }
   );
 };
+
+
+// Add to crmController.js
+export const getAnalyticsOverview = (req, res) => {
+  const query = `
+    SELECT 
+      (SELECT COUNT(*) FROM crm_tasks) AS total_tasks,
+      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'todo') AS todo_tasks,
+      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'doing') AS doing_tasks,
+      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'completed') AS completed_tasks,
+      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'high') AS high_priority,
+      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'medium') AS medium_priority,
+      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'low') AS low_priority;
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results[0]);
+  });
+};
+
+export const getAssigneeStats = (req, res) => {
+  const query = `
+    SELECT 
+      assignee,
+      COUNT(*) AS total_tasks,
+      SUM(status = 'todo') AS todo,
+      SUM(status = 'doing') AS doing,
+      SUM(status = 'completed') AS completed,
+      SUM(priority = 'high') AS high_priority,
+      SUM(priority = 'medium') AS medium_priority,
+      SUM(priority = 'low') AS low_priority
+    FROM crm_tasks
+    GROUP BY assignee;
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+};
