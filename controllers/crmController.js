@@ -4,7 +4,7 @@ import db from '../config/db.js';
 export const createTask = (req, res) => {
   console.log('Received task creation request:', req.body);
   
-  const { title, description, status = 'pending', assignee, priority = 'medium', dueDate = null } = req.body;
+  const { title, description, assignee, status = 'todo' } = req.body;
 
   // Validate required fields
   if (!title || !description || !assignee) {
@@ -16,9 +16,27 @@ export const createTask = (req, res) => {
     });
   }
 
-  const query = `INSERT INTO crm_tasks (title, description, status, assignee, priority, due_date) 
-                VALUES (?, ?, ?, ?, ?, ?)`;
-  const values = [title, description, status, assignee, priority, dueDate];
+  // Validate status
+  const validStatuses = ['todo', 'doing', 'completed'];
+  if (status && !validStatuses.includes(status)) {
+    return res.status(400).json({
+      error: 'Invalid status',
+      details: `Status must be one of: ${validStatuses.join(', ')}`
+    });
+  }
+
+  // Check database connection
+  if (!db) {
+    console.error('Database connection not available');
+    return res.status(500).json({ 
+      error: 'Database connection error',
+      details: 'Database connection is not available'
+    });
+  }
+
+  const query = `INSERT INTO crm_tasks (title, description, assignee, status) 
+                VALUES (?, ?, ?, ?)`;
+  const values = [title, description, assignee, status];
 
   console.log('Executing query:', query);
   console.log('With values:', values);
@@ -38,22 +56,46 @@ export const createTask = (req, res) => {
     res.status(201).json({ 
       message: 'Task created successfully', 
       id: results.insertId,
-      task: { title, description, status, assignee, priority, dueDate }
+      task: { title, description, assignee, status }
     });
   });
 };
 
 // Get all tasks
 export const getAllTasks = (req, res) => {
-  db.query(
-    'SELECT * FROM crm_tasks WHERE status != "deleted" ORDER BY created_at DESC',
-    (err, results) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error fetching tasks', details: err });
-      }
-      res.status(200).json(results);
+  console.log('Fetching all tasks...');
+  
+  if (!db) {
+    console.error('Database connection not available');
+    return res.status(500).json({ 
+      error: 'Database connection error',
+      details: 'Database connection is not available'
+    });
+  }
+
+  const query = 'SELECT * FROM crm_tasks ORDER BY created_at DESC';
+  
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ 
+        error: 'Error fetching tasks', 
+        details: err.message,
+        code: err.code,
+        sql: err.sql
+      });
     }
-  );
+
+    // Format dates to ISO string
+    const formattedResults = results.map(task => ({
+      ...task,
+      created_at: task.created_at ? new Date(task.created_at).toISOString() : null,
+      updated_at: task.updated_at ? new Date(task.updated_at).toISOString() : null
+    }));
+
+    console.log(`Found ${formattedResults.length} tasks`);
+    res.status(200).json(formattedResults);
+  });
 };
 
 // Get task by ID
@@ -130,7 +172,8 @@ export const updateTaskStatus = (req, res) => {
     });
   }
 
-  const validStatuses = ['pending', 'doing', 'done', 'deleted'];
+  // Validate status against the correct enum values
+  const validStatuses = ['todo', 'doing', 'completed'];
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
       error: 'Invalid status',
