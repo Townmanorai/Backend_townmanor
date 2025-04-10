@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS crm_tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    assignee VARCHAR(100) NOT NULL,
+    priority VARCHAR(50) DEFAULT 'medium',
+    due_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+); 
