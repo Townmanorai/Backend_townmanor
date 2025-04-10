@@ -222,7 +222,7 @@ export const getAnalyticsOverview = (req, res) => {
       (SELECT COUNT(*) FROM crm_tasks WHERE status = 'completed') AS completed_tasks,
       (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'high') AS high_priority,
       (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'medium') AS medium_priority,
-      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'low') AS low_priority;
+      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'low') AS low_priority
   `;
 
   db.query(query, (err, results) => {
@@ -243,7 +243,7 @@ export const getAssigneeStats = (req, res) => {
       SUM(priority = 'medium') AS medium_priority,
       SUM(priority = 'low') AS low_priority
     FROM crm_tasks
-    GROUP BY assignee;
+    GROUP BY assignee
   `;
 
   db.query(query, (err, results) => {

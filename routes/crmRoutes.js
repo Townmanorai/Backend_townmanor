@@ -18,6 +18,10 @@ router.post('/tasks', createTask);
 // Get all tasks
 router.get('/tasks', getAllTasks);
 
+// Add to crmRoutes.js
+router.get('/analytics/overview', getAnalyticsOverview);
+router.get('/analytics/assignee-stats', getAssigneeStats);
+
 // Get a single task by ID
 router.get('/tasks/:id', getTaskById);
 
@@ -30,8 +34,6 @@ router.put('/tasks/:id/status', updateTaskStatus);
 // Delete a task (soft delete)
 router.delete('/tasks/:id', deleteTask);
 
-// Add to crmRoutes.js
-router.get('/analytics/overview', getAnalyticsOverview);
-router.get('/analytics/assignee-stats', getAssigneeStats);
+
 
 export default router; 
