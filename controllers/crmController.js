@@ -4,7 +4,8 @@ import db from '../config/db.js';
 export const createTask = (req, res) => {
   console.log('Received task creation request:', req.body);
   
-  const { title, description, assignee, status = 'todo' } = req.body;
+  // Destructure including priority with a default
+  const { title, description, assignee, status = 'todo', priority} = req.body;
 
   // Validate required fields
   if (!title || !description || !assignee) {
@@ -34,9 +35,10 @@ export const createTask = (req, res) => {
     });
   }
 
-  const query = `INSERT INTO crm_tasks (title, description, assignee, status) 
-                VALUES (?, ?, ?, ?)`;
-  const values = [title, description, assignee, status];
+  // Updated query to include priority
+  const query = `INSERT INTO crm_tasks (title, description, assignee, status, priority) 
+                 VALUES (?, ?, ?, ?, ?)`;
+  const values = [title, description, assignee, status, priority];
 
   console.log('Executing query:', query);
   console.log('With values:', values);
@@ -56,7 +58,7 @@ export const createTask = (req, res) => {
     res.status(201).json({ 
       message: 'Task created successfully', 
       id: results.insertId,
-      task: { title, description, assignee, status }
+      task: { title, description, assignee, status, priority }
     });
   });
 };
@@ -207,4 +209,4 @@ export const updateTaskStatus = (req, res) => {
       });
     }
   );
-}; 
+};
