@@ -216,12 +216,12 @@ export const getAnalyticsOverview = (req, res) => {
   const query = `
     SELECT 
       (SELECT COUNT(*) FROM crm_tasks) AS total_tasks,
-      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'todo') AS todo_tasks,
-      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'doing') AS doing_tasks,
-      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'completed') AS completed_tasks,
-      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'high') AS high_priority,
-      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'medium') AS medium_priority,
-      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'low') AS low_priority
+      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'todo') AS todo_count,
+      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'doing') AS doing_count,
+      (SELECT COUNT(*) FROM crm_tasks WHERE status = 'completed') AS completed_count,
+      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'high') AS high_priority_count,
+      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'medium') AS medium_priority_count,
+      (SELECT COUNT(*) FROM crm_tasks WHERE priority = 'low') AS low_priority_count
   `;
 
   db.query(query, (err, results) => {
@@ -239,12 +239,12 @@ export const getAssigneeStats = (req, res) => {
     SELECT 
       assignee,
       COUNT(*) AS total_tasks,
-      SUM(status = 'todo') AS todo_tasks,
-      SUM(status = 'doing') AS doing_tasks,
-      SUM(status = 'completed') AS completed_tasks,
-      SUM(priority = 'high') AS high_priority,
-      SUM(priority = 'medium') AS medium_priority,
-      SUM(priority = 'low') AS low_priority
+      SUM(CASE WHEN status = 'todo' THEN 1 ELSE 0 END) AS todo_count,
+      SUM(CASE WHEN status = 'doing' THEN 1 ELSE 0 END) AS doing_count,
+      SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_count,
+      SUM(CASE WHEN priority = 'high' THEN 1 ELSE 0 END) AS high_priority_count,
+      SUM(CASE WHEN priority = 'medium' THEN 1 ELSE 0 END) AS medium_priority_count,
+      SUM(CASE WHEN priority = 'low' THEN 1 ELSE 0 END) AS low_priority_count
     FROM crm_tasks
     GROUP BY assignee
   `;
