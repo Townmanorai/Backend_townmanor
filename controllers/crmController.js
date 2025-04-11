@@ -211,8 +211,7 @@ export const updateTaskStatus = (req, res) => {
   );
 };
 
-
-// Add to crmController.js
+// Get analytics overview
 export const getAnalyticsOverview = (req, res) => {
   const query = `
     SELECT 
@@ -226,19 +225,23 @@ export const getAnalyticsOverview = (req, res) => {
   `;
 
   db.query(query, (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(results[0]);
+    if (err) {
+      console.error('Error getting analytics overview:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json(results[0]);
   });
 };
 
+// Get assignee statistics
 export const getAssigneeStats = (req, res) => {
   const query = `
     SELECT 
       assignee,
       COUNT(*) AS total_tasks,
-      SUM(status = 'todo') AS todo,
-      SUM(status = 'doing') AS doing,
-      SUM(status = 'completed') AS completed,
+      SUM(status = 'todo') AS todo_tasks,
+      SUM(status = 'doing') AS doing_tasks,
+      SUM(status = 'completed') AS completed_tasks,
       SUM(priority = 'high') AS high_priority,
       SUM(priority = 'medium') AS medium_priority,
       SUM(priority = 'low') AS low_priority
@@ -247,7 +250,10 @@ export const getAssigneeStats = (req, res) => {
   `;
 
   db.query(query, (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(results);
+    if (err) {
+      console.error('Error getting assignee stats:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json(results);
   });
 };
