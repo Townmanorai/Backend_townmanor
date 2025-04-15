@@ -18,7 +18,7 @@ export const createTask = (req, res) => {
   }
 
   // Validate status
-  const validStatuses = ['todo', 'doing', 'completed'];
+  const validStatuses = ['todo', 'doing', 'testing', 'completed'];
   if (status && !validStatuses.includes(status)) {
     return res.status(400).json({
       error: 'Invalid status',
@@ -416,7 +416,7 @@ export const createWorkLog = (req, res) => {
   }
 
   db.query(
-    'INSERT INTO work_logs (user_id, work_date, task_description) VALUES (?, ?, ?)',
+    'INSERT INTO crm_work_logs (user_id, work_date, task_description) VALUES (?, ?, ?)',
     [user_id, work_date, task_description],
     (err, results) => {
       if (err) {
@@ -438,7 +438,7 @@ export const createWorkLog = (req, res) => {
 export const getWorkLogs = (req, res) => {
   const { user_id, start_date, end_date } = req.query;
 
-  let query = 'SELECT * FROM work_logs WHERE 1=1';
+  let query = 'SELECT * FROM crm_work_logs WHERE 1=1';
   const params = [];
 
   if (user_id) {
@@ -485,7 +485,7 @@ export const exportWorkLogs = (req, res) => {
     SELECT 
       wl.*,
       u.name as user_name
-    FROM work_logs wl
+    FROM crm_work_logs wl
     LEFT JOIN users u ON wl.user_id = u.id
     WHERE work_date BETWEEN ? AND ?
     ORDER BY work_date DESC, user_id, created_at DESC
