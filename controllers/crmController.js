@@ -160,22 +160,22 @@ export const deleteTask = (req, res) => {
   );
 };
 
-// Update task status
+// Update task status with history tracking
 export const updateTaskStatus = (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { status, changed_by } = req.body;
 
-  console.log('Updating task status:', { id, status });
+  console.log('Updating task status:', { id, status, changed_by });
 
-  if (!status) {
+  if (!status || !changed_by) {
     return res.status(400).json({
-      error: 'Missing required field',
-      details: 'Status is required'
+      error: 'Missing required fields',
+      details: 'Status and changed_by are required'
     });
   }
 
   // Validate status against the correct enum values
-  const validStatuses = ['todo', 'doing', 'completed'];
+  const validStatuses = ['todo', 'in_progress', 'completed', 'testing'];
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
       error: 'Invalid status',
@@ -183,32 +183,332 @@ export const updateTaskStatus = (req, res) => {
     });
   }
 
+  // Start a transaction
+  db.beginTransaction(err => {
+    if (err) {
+      console.error('Transaction error:', err);
+      return res.status(500).json({
+        error: 'Error starting transaction',
+        details: err.message
+      });
+    }
+
+    // Update task status
+    db.query(
+      'UPDATE crm_tasks SET status = ? WHERE id = ?',
+      [status, id],
+      (err, results) => {
+        if (err) {
+          return db.rollback(() => {
+            console.error('Database error:', err);
+            res.status(500).json({
+              error: 'Error updating task status',
+              details: err.message
+            });
+          });
+        }
+
+        if (results.affectedRows === 0) {
+          return db.rollback(() => {
+            res.status(404).json({
+              error: 'Task not found',
+              details: `No task found with id ${id}`
+            });
+          });
+        }
+
+        // Record status change in history
+        db.query(
+          'INSERT INTO task_history (task_id, status, changed_by) VALUES (?, ?, ?)',
+          [id, status, changed_by],
+          (err, historyResults) => {
+            if (err) {
+              return db.rollback(() => {
+                console.error('Error recording history:', err);
+                res.status(500).json({
+                  error: 'Error recording task history',
+                  details: err.message
+                });
+              });
+            }
+
+            // Commit transaction
+            db.commit(err => {
+              if (err) {
+                return db.rollback(() => {
+                  console.error('Commit error:', err);
+                  res.status(500).json({
+                    error: 'Error committing transaction',
+                    details: err.message
+                  });
+                });
+              }
+
+              res.status(200).json({
+                message: 'Task status updated successfully',
+                taskId: id,
+                newStatus: status
+              });
+            });
+          }
+        );
+      }
+    );
+  });
+};
+
+// Get task history
+export const getTaskHistory = (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    SELECT th.*, t.title as task_title
+    FROM task_history th
+    JOIN crm_tasks t ON th.task_id = t.id
+    WHERE th.task_id = ?
+    ORDER BY th.changed_at DESC
+  `;
+
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching task history:', err);
+      return res.status(500).json({
+        error: 'Error fetching task history',
+        details: err.message
+      });
+    }
+
+    res.status(200).json(results);
+  });
+};
+
+// Update task priority
+export const updateTaskPriority = (req, res) => {
+  const { id } = req.params;
+  const { priority } = req.body;
+
+  if (!priority) {
+    return res.status(400).json({
+      error: 'Missing required field',
+      details: 'Priority is required'
+    });
+  }
+
+  const validPriorities = ['low', 'medium', 'high', 'urgent'];
+  if (!validPriorities.includes(priority)) {
+    return res.status(400).json({
+      error: 'Invalid priority',
+      details: `Priority must be one of: ${validPriorities.join(', ')}`
+    });
+  }
+
   db.query(
-    'UPDATE crm_tasks SET status = ? WHERE id = ?',
-    [status, id],
+    'UPDATE crm_tasks SET priority = ? WHERE id = ?',
+    [priority, id],
     (err, results) => {
       if (err) {
-        console.error('Database error:', err);
         return res.status(500).json({
-          error: 'Error updating task status',
+          error: 'Error updating task priority',
           details: err.message
         });
       }
 
       if (results.affectedRows === 0) {
         return res.status(404).json({
-          error: 'Task not found',
-          details: `No task found with id ${id}`
+          error: 'Task not found'
         });
       }
 
       res.status(200).json({
-        message: 'Task status updated successfully',
+        message: 'Task priority updated successfully',
         taskId: id,
-        newStatus: status
+        newPriority: priority
       });
     }
   );
+};
+
+// Update task progress
+export const updateTaskProgress = (req, res) => {
+  const { id } = req.params;
+  const { progress } = req.body;
+
+  if (typeof progress !== 'number' || progress < 0 || progress > 100) {
+    return res.status(400).json({
+      error: 'Invalid progress value',
+      details: 'Progress must be a number between 0 and 100'
+    });
+  }
+
+  db.query(
+    'UPDATE crm_tasks SET progress = ? WHERE id = ?',
+    [progress, id],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({
+          error: 'Error updating task progress',
+          details: err.message
+        });
+      }
+
+      if (results.affectedRows === 0) {
+        return res.status(404).json({
+          error: 'Task not found'
+        });
+      }
+
+      res.status(200).json({
+        message: 'Task progress updated successfully',
+        taskId: id,
+        newProgress: progress
+      });
+    }
+  );
+};
+
+// Assign tester
+export const assignTester = (req, res) => {
+  const { id } = req.params;
+  const { tester } = req.body;
+
+  if (!tester) {
+    return res.status(400).json({
+      error: 'Missing required field',
+      details: 'Tester name is required'
+    });
+  }
+
+  db.query(
+    'UPDATE crm_tasks SET tester = ? WHERE id = ?',
+    [tester, id],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({
+          error: 'Error assigning tester',
+          details: err.message
+        });
+      }
+
+      if (results.affectedRows === 0) {
+        return res.status(404).json({
+          error: 'Task not found'
+        });
+      }
+
+      res.status(200).json({
+        message: 'Tester assigned successfully',
+        taskId: id,
+        tester: tester
+      });
+    }
+  );
+};
+
+// Create work log
+export const createWorkLog = (req, res) => {
+  const { user_id, work_date, task_description } = req.body;
+
+  if (!user_id || !work_date || !task_description) {
+    return res.status(400).json({
+      error: 'Missing required fields',
+      details: 'user_id, work_date, and task_description are required'
+    });
+  }
+
+  db.query(
+    'INSERT INTO work_logs (user_id, work_date, task_description) VALUES (?, ?, ?)',
+    [user_id, work_date, task_description],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({
+          error: 'Error creating work log',
+          details: err.message
+        });
+      }
+
+      res.status(201).json({
+        message: 'Work log created successfully',
+        id: results.insertId
+      });
+    }
+  );
+};
+
+// Get work logs
+export const getWorkLogs = (req, res) => {
+  const { user_id, start_date, end_date } = req.query;
+
+  let query = 'SELECT * FROM work_logs WHERE 1=1';
+  const params = [];
+
+  if (user_id) {
+    query += ' AND user_id = ?';
+    params.push(user_id);
+  }
+
+  if (start_date) {
+    query += ' AND work_date >= ?';
+    params.push(start_date);
+  }
+
+  if (end_date) {
+    query += ' AND work_date <= ?';
+    params.push(end_date);
+  }
+
+  query += ' ORDER BY work_date DESC, created_at DESC';
+
+  db.query(query, params, (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        error: 'Error fetching work logs',
+        details: err.message
+      });
+    }
+
+    res.status(200).json(results);
+  });
+};
+
+// Export work logs
+export const exportWorkLogs = (req, res) => {
+  const { start_date, end_date } = req.query;
+
+  if (!start_date || !end_date) {
+    return res.status(400).json({
+      error: 'Missing required fields',
+      details: 'start_date and end_date are required'
+    });
+  }
+
+  const query = `
+    SELECT 
+      wl.*,
+      u.name as user_name
+    FROM work_logs wl
+    LEFT JOIN users u ON wl.user_id = u.id
+    WHERE work_date BETWEEN ? AND ?
+    ORDER BY work_date DESC, user_id, created_at DESC
+  `;
+
+  db.query(query, [start_date, end_date], (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        error: 'Error exporting work logs',
+        details: err.message
+      });
+    }
+
+    // Format data for Excel export
+    const excelData = results.map(log => ({
+      Date: log.work_date,
+      User: log.user_name || log.user_id,
+      'Task Description': log.task_description,
+      'Created At': log.created_at
+    }));
+
+    res.status(200).json(excelData);
+  });
 };
 
 // Get analytics overview
