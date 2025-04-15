@@ -122,7 +122,26 @@ export const getTaskById = (req, res) => {
 // Update task
 export const updateTask = (req, res) => {
   const { id } = req.params;
-  const { title, description, status, assignee, priority, dueDate } = req.body;
+  const updateFields = req.body;
+  
+  // Build dynamic update query
+  const validFields = ['title', 'description', 'status', 'assignee', 'priority', 'dueDate'];
+  const setClauses = [];
+  const values = [];
+
+  Object.entries(updateFields).forEach(([key, value]) => {
+    if (validFields.includes(key)) {
+      setClauses.push(`${key} = ?`);
+      values.push(value);
+    }
+  });
+
+  if (setClauses.length === 0) {
+    return res.status(400).json({ error: 'No valid fields to update' });
+  }
+
+  const query = `UPDATE crm_tasks SET ${setClauses.join(', ')} WHERE id = ?`;
+  values.push(id);
 
   db.query(
     `UPDATE crm_tasks 
