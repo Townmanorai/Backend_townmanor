@@ -51,9 +51,9 @@ router.put('/tasks/:id/assign-tester', assignTester);
 router.get('/tasks/:id/history', getTaskHistory);
 
 // Work logs
-router.post('/work-logs', createWorkLog);
-router.get('/work-logs', getWorkLogs);
-router.get('/work-logs/export', exportWorkLogs);
+router.post('/worklogs', createWorkLog);
+router.get('/worklogs', getWorkLogs);
+router.get('/worklogs/export', exportWorkLogs);
 
 // Delete a task (soft delete)
 router.delete('/tasks/:id', deleteTask);
