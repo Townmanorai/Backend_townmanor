@@ -238,7 +238,7 @@ export const updateTaskStatus = (req, res) => {
 
         // Record status change in history
         db.query(
-          'INSERT INTO task_history (task_id, status, changed_by) VALUES (?, ?, ?)',
+          'INSERT INTO crm_task_history (task_id, status, changed_by) VALUES (?, ?, ?)',
           [id, status, changed_by],
           (err, historyResults) => {
             if (err) {
@@ -282,7 +282,7 @@ export const getTaskHistory = (req, res) => {
 
   const query = `
     SELECT th.*, t.title as task_title
-    FROM task_history th
+    FROM crm_task_history th
     JOIN crm_tasks t ON th.task_id = t.id
     WHERE th.task_id = ?
     ORDER BY th.changed_at DESC
