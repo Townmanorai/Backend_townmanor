@@ -182,7 +182,7 @@ export const deleteTask = (req, res) => {
 // Update task status with history tracking
 export const updateTaskStatus = (req, res) => {
   const { id } = req.params;
-  const { status, changed_by } = req.body;
+  const { status, changed_by } = req.body; // You may remove changed_by if not used
 
   console.log('Updating task status:', { id, status, changed_by });
 
@@ -193,8 +193,7 @@ export const updateTaskStatus = (req, res) => {
     });
   }
 
-  // Validate status against the correct enum values
-  const validStatuses = ['todo', 'doing', 'completed', 'testing'];
+  const validStatuses = ['todo', 'doing', 'testing', 'completed'];
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
       error: 'Invalid status',
@@ -212,69 +211,91 @@ export const updateTaskStatus = (req, res) => {
       });
     }
 
-    // Update task status
-    db.query(
-      'UPDATE crm_tasks SET status = ? WHERE id = ?',
-      [status, id],
-      (err, results) => {
-        if (err) {
-          return db.rollback(() => {
-            console.error('Database error:', err);
-            res.status(500).json({
-              error: 'Error updating task status',
-              details: err.message
-            });
+    // Step 1: Fetch the current status from crm_tasks
+    db.query('SELECT status FROM crm_tasks WHERE id = ?', [id], (err, results) => {
+      if (err) {
+        return db.rollback(() => {
+          res.status(500).json({
+            error: 'Error fetching current task status',
+            details: err.message
           });
-        }
-
-        if (results.affectedRows === 0) {
-          return db.rollback(() => {
-            res.status(404).json({
-              error: 'Task not found',
-              details: `No task found with id ${id}`
-            });
+        });
+      }
+      if (results.length === 0) {
+        return db.rollback(() => {
+          res.status(404).json({
+            error: 'Task not found',
+            details: `No task found with id ${id}`
           });
-        }
+        });
+      }
+      const currentStatus = results[0].status;
 
-        // Record status change in history
-        db.query(
-          'INSERT INTO crm_task_history (task_id, status, changed_by) VALUES (?, ?, ?)',
-          [id, status, changed_by],
-          (err, historyResults) => {
-            if (err) {
-              return db.rollback(() => {
-                console.error('Error recording history:', err);
-                res.status(500).json({
-                  error: 'Error recording task history',
-                  details: err.message
-                });
+      // Step 2: Update the task status in crm_tasks
+      db.query(
+        'UPDATE crm_tasks SET status = ? WHERE id = ?',
+        [status, id],
+        (err, results) => {
+          if (err) {
+            return db.rollback(() => {
+              console.error('Error updating task status:', err);
+              res.status(500).json({
+                error: 'Error updating task status',
+                details: err.message
               });
-            }
+            });
+          }
+          if (results.affectedRows === 0) {
+            return db.rollback(() => {
+              res.status(404).json({
+                error: 'Task not found',
+                details: `No task found with id ${id}`
+              });
+            });
+          }
 
-            // Commit transaction
-            db.commit(err => {
+          // Step 3: Insert into crm_task_history using the correct columns:
+          // from_status (the previous status) and to_status (the new status)
+          db.query(
+            'INSERT INTO crm_task_history (task_id, from_status, to_status) VALUES (?, ?, ?)',
+            [id, currentStatus, status],
+            (err, historyResults) => {
               if (err) {
                 return db.rollback(() => {
-                  console.error('Commit error:', err);
+                  console.error('Error recording task history:', err);
                   res.status(500).json({
-                    error: 'Error committing transaction',
+                    error: 'Error recording task history',
                     details: err.message
                   });
                 });
               }
 
-              res.status(200).json({
-                message: 'Task status updated successfully',
-                taskId: id,
-                newStatus: status
+              // Commit the transaction
+              db.commit(err => {
+                if (err) {
+                  return db.rollback(() => {
+                    console.error('Commit error:', err);
+                    res.status(500).json({
+                      error: 'Error committing transaction',
+                      details: err.message
+                    });
+                  });
+                }
+
+                res.status(200).json({
+                  message: 'Task status updated successfully',
+                  taskId: id,
+                  newStatus: status
+                });
               });
-            });
-          }
-        );
-      }
-    );
+            }
+          );
+        }
+      );
+    });
   });
 };
+
 
 // Get task history
 export const getTaskHistory = (req, res) => {
