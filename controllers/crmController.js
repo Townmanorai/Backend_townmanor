@@ -194,7 +194,7 @@ export const updateTaskStatus = (req, res) => {
   }
 
   // Validate status against the correct enum values
-  const validStatuses = ['todo', 'in_progress', 'completed', 'testing'];
+  const validStatuses = ['todo', 'doing', 'completed', 'testing'];
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
       error: 'Invalid status',
@@ -490,8 +490,9 @@ export const getWorkLogs = (req, res) => {
 };
 
 // Export work logs
+
 export const exportWorkLogs = (req, res) => {
-  const { start_date, end_date } = req.query;
+  const { start_date, end_date, user_id } = req.query;
 
   if (!start_date || !end_date) {
     return res.status(400).json({
@@ -500,17 +501,25 @@ export const exportWorkLogs = (req, res) => {
     });
   }
 
-  const query = `
+  let query = `
     SELECT 
       wl.*,
       u.name as user_name
     FROM crm_work_logs wl
     LEFT JOIN users u ON wl.user_id = u.id
     WHERE work_date BETWEEN ? AND ?
-    ORDER BY work_date DESC, user_id, created_at DESC
   `;
+  const params = [start_date, end_date];
 
-  db.query(query, [start_date, end_date], (err, results) => {
+  // If a user_id is provided, filter the logs for that user
+  if (user_id) {
+    query += ' AND wl.user_id = ?';
+    params.push(user_id);
+  }
+
+  query += ' ORDER BY work_date DESC, user_id, created_at DESC';
+
+  db.query(query, params, (err, results) => {
     if (err) {
       return res.status(500).json({
         error: 'Error exporting work logs',
@@ -529,6 +538,7 @@ export const exportWorkLogs = (req, res) => {
     res.status(200).json(excelData);
   });
 };
+
 
 // Get analytics overview
 export const getAnalyticsOverview = (req, res) => {
