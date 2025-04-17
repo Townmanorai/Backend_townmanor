@@ -36,6 +36,7 @@ import ownerPropertyRoutes from './routes/ownerPropertyRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
 import articleRoutes from './routes/articleRoutes.js';
 import crmRoutes from './routes/crmRoutes.js';
+import leadGenRoutes from './routes/leadGenerationRoutes.js';
 
 
 
@@ -92,24 +93,15 @@ app.use(searchbar)
 
 // Use PayU routes
 app.use(payuRoutes);
-
 //ads routs
 app.use(adsAgentRoutes)
-
 app.use(userdetailsRoute)
-
 app.use(userPackage)
-
 app.use(userplanslimit)
-
 app.use(advertisementsRoute)
-
 app.use('/api/users', userRoutes);
-
 app.use(propertyLeadRoutes); 
-
 app.use('/api/properties', propertyRoutesroute);
-
 app.use('/api/commercial', commercialRoutes);
 app.use('/api', loanRoutes);
 app.use('/api', homeInsuranceRoute);
@@ -123,13 +115,17 @@ app.use('/owner-property', ownerPropertyRoutes);
 // Blog and Article Routes
 app.use('/blogs', blogRoutes);
 app.use('/articles', articleRoutes);
+
+//crm routes
 app.use('/crm', crmRoutes);
+
+//lead generation routes
+app.use('/formlead', leadGenRoutes);
 
 //files upload
 
 app.use('/image',imageuploadcontroller);
 app.use('/image',awssimageuploadcontroller);
-
 
 
 // Start server
