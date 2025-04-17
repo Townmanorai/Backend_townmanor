@@ -145,6 +145,35 @@ export const verifyEmail = async (req, res) => {
 
 // ─── New Admin APIs ─────────────────────────────────────────────────────────────
 
+// Get all user
+export const getUsers = (req, res) => {
+  db.query('SELECT * FROM user', (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error fetching blogs', details: err });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'No user found' });
+    }
+    res.status(200).json(results);
+  });
+};
+
+// Get user by ID
+export const getUserById = (req, res) => {
+  const { id } = req.params;
+
+  db.query('SELECT * FROM user WHERE id = ? ', [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error fetching user', details: err });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+    res.status(200).json(results[0]);
+  });
+};
+
+
 /**
  * GET /api/users
  */

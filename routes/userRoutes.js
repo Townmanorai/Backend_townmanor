@@ -9,8 +9,8 @@ router.get('/verify/:token', verifyEmail);
 router.get('/api/protected' , protectedRoute);
 
 // ─── Admin / CRUD on users ─────────────────────────────────────────────────────
-// router.get('/',          getUsers);      // GET    /api/users
-// router.get('/:id',       getUserById);   // GET    /api/users/:id
+router.get('/',          getUsers);      
+router.get('/:id',       getUserById);   
 // router.put('/:id',       updateUser);    // PUT    /api/users/:id
 // router.delete('/:id',    deleteUser);    // DELETE /api/users/:id
 
