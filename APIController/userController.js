@@ -150,10 +150,7 @@ export const verifyEmail = async (req, res) => {
  */
 export const getUsers = (req, res) => {
   const sql = `
-    SELECT 
-      id, username, name_surname, gstNo, address, phone, email,
-      created_on, updated_on, status
-    FROM user
+    SELECT * FROM user
     ORDER BY created_on DESC
   `;
   db.query(sql, (err, results) => {
@@ -168,26 +165,26 @@ export const getUsers = (req, res) => {
 /**
  * GET /api/users/:id
  */
-export const getUserById = (req, res) => {
-  const { id } = req.params;
-  const sql = `
-    SELECT 
-      id, username, name_surname, gstNo, address, phone, email,
-      created_on, updated_on, status
-    FROM user
-    WHERE id = ?
-  `;
-  db.query(sql, [id], (err, results) => {
-    if (err) {
-      console.error('DB error [getUserById]:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-    if (!results.length) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.json(results[0]);
-  });
-};
+// export const getUserById = (req, res) => {
+//   const { id } = req.params;
+//   const sql = `
+//     SELECT 
+//       id, username, name_surname, gstNo, address, phone, email,
+//       created_on, updated_on, status
+//     FROM user
+//     WHERE id = ?
+//   `;
+//   db.query(sql, [id], (err, results) => {
+//     if (err) {
+//       console.error('DB error [getUserById]:', err);
+//       return res.status(500).json({ message: 'Internal server error' });
+//     }
+//     if (!results.length) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.json(results[0]);
+//   });
+// };
 
 /**
  * PUT /api/users/:id
@@ -254,20 +251,20 @@ export const getUserById = (req, res) => {
 /**
  * DELETE /api/users/:id
  */
-export const deleteUser = (req, res) => {
-  const { id } = req.params;
-  const sql = 'DELETE FROM user WHERE id = ?';
-  db.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('DB error [deleteUser]:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.json({ message: 'User deleted' });
-  });
-};
+// export const deleteUser = (req, res) => {
+//   const { id } = req.params;
+//   const sql = 'DELETE FROM user WHERE id = ?';
+//   db.query(sql, [id], (err, result) => {
+//     if (err) {
+//       console.error('DB error [deleteUser]:', err);
+//       return res.status(500).json({ message: 'Internal server error' });
+//     }
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.json({ message: 'User deleted' });
+//   });
+// };
 
 
   
