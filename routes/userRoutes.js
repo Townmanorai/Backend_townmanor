@@ -1,5 +1,5 @@
 import express from 'express';
-import { signup, login, verifyEmail ,protectedRoute} from '../APIController/userController.js';
+import { signup, login, verifyEmail ,protectedRoute ,getUsers ,getUserById} from '../APIController/userController.js';
 
 const router = express.Router();
 
