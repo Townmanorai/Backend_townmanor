@@ -235,6 +235,30 @@ export const getSaleProperties = (req, res) => {
 };
 
 
+// GET https://www.townmanor.ai/api/owner-property/filter/rent
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=noida
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=noida&configuration=2BHK
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?furnish_type=Furnished
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?construction_status=Ready
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=noida&configuration=2BHK&furnish_type=Furnished&construction_status=Ready
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=noida&configuration=2BHK&furnish_type=Furnished&construction_status=Ready
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?configuration=2BHK
+
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=Mumbai&configuration=2BHK
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=Mumbai&furnish_type=Furnished
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=Mumbai&construction_status=Ready-To-Move
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?configuration=2BHK&furnish_type=Furnished
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?configuration=2BHK&construction_status=Ready-To-Move
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?furnish_type=Furnished&construction_status=Ready-To-Move
+
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=Mumbai&configuration=2BHK&furnish_type=Furnished
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=Mumbai&configuration=2BHK&construction_status=Ready-To-Move
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=Mumbai&furnish_type=Furnished&construction_status=Ready-To-Move
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?configuration=2BHK&furnish_type=Furnished&construction_status=Ready-To-Move
+
+// GET https://www.townmanor.ai/api/owner-property/filter/rent?city=Mumbai&configuration=2BHK&furnish_type=Furnished&construction_status=Ready-To-Move
+
+
 export const getRentProperties = (req, res) => {
   const { city, configuration, furnish_type, construction_status } = req.query;
   let sql = 'SELECT * FROM owner_property WHERE status = 1 AND purpose = "rent"';
@@ -255,6 +279,54 @@ export const getRentProperties = (req, res) => {
     filters.push(furnish_type);
   }
 
+  if (construction_status) {
+    sql += ' AND construction_status = ?';
+    filters.push(construction_status);
+  }
+
+  sql += ' ORDER BY created_at DESC';
+
+  db.query(sql, filters, (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(err);
+    }
+    res.status(200).json(results);
+  });
+};
+
+export const getFilteredProperties = (req, res) => {
+  const {
+    purpose,           
+    city,
+    configuration,
+    furnish_type,
+    construction_status
+  } = req.query;
+
+  // base SQL
+  let sql = 'SELECT * FROM owner_property WHERE status = 1';
+  const filters = [];
+
+  // purpose is now a query‑param
+  if (purpose) {
+    sql += ' AND purpose = ?';
+    filters.push(purpose);
+  }
+
+  // remaining filters
+  if (city) {
+    sql += ' AND city = ?';
+    filters.push(city);
+  }
+  if (configuration) {
+    sql += ' AND configuration = ?';
+    filters.push(configuration);
+  }
+  if (furnish_type) {
+    sql += ' AND furnish_type = ?';
+    filters.push(furnish_type);
+  }
   if (construction_status) {
     sql += ' AND construction_status = ?';
     filters.push(construction_status);
