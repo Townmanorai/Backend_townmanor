@@ -148,19 +148,19 @@ export const verifyEmail = async (req, res) => {
 /**
  * GET /api/users
  */
-export const getUsers = (req, res) => {
-  const sql = `
-    SELECT * FROM user
-    ORDER BY created_on DESC
-  `;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('DB error [getUsers]:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-    res.json(results);
-  });
-};
+// export const getUsers = (req, res) => {
+//   const sql = `
+//     SELECT * FROM user
+//     ORDER BY created_on DESC
+//   `;
+//   db.query(sql, (err, results) => {
+//     if (err) {
+//       console.error('DB error [getUsers]:', err);
+//       return res.status(500).json({ message: 'Internal server error' });
+//     }
+//     res.json(results);
+//   });
+// };
 
 /**
  * GET /api/users/:id
