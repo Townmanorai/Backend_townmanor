@@ -153,7 +153,7 @@ export const getUsers = (req, res) => {
     SELECT 
       id, username, name_surname, gstNo, address, phone, email,
       created_on, updated_on, status
-    FROM \`user\`
+    FROM user
     ORDER BY created_on DESC
   `;
   db.query(sql, (err, results) => {
@@ -174,7 +174,7 @@ export const getUserById = (req, res) => {
     SELECT 
       id, username, name_surname, gstNo, address, phone, email,
       created_on, updated_on, status
-    FROM \`user\`
+    FROM user
     WHERE id = ?
   `;
   db.query(sql, [id], (err, results) => {
@@ -192,71 +192,71 @@ export const getUserById = (req, res) => {
 /**
  * PUT /api/users/:id
  */
-export const updateUser = (req, res) => {
-  const { id } = req.params;
-  const {
-    username,
-    password,
-    name_surname,
-    gstNo,
-    address,
-    phone,
-    email,
-    status
-  } = req.body;
+// export const updateUser = (req, res) => {
+//   const { id } = req.params;
+//   const {
+//     username,
+//     password,
+//     name_surname,
+//     gstNo,
+//     address,
+//     phone,
+//     email,
+//     status
+//   } = req.body;
 
-  // Optional: re‑validate inputs here
+//   // Optional: re‑validate inputs here
 
-  // If password is being updated, hash it
-  const updateFields = [];
-  const args = [];
+//   // If password is being updated, hash it
+//   const updateFields = [];
+//   const args = [];
 
-  if (username)      { updateFields.push('username = ?');      args.push(username); }
-  if (password)      { 
-    const hashed = bcrypt.hashSync(password, 10);
-    updateFields.push('password = ?');
-    args.push(hashed);
-  }
-  if (name_surname)  { updateFields.push('name_surname = ?');  args.push(name_surname); }
-  if (gstNo)         { updateFields.push('gstNo = ?');         args.push(gstNo); }
-  if (address)       { updateFields.push('address = ?');       args.push(address); }
-  if (phone)         { updateFields.push('phone = ?');         args.push(phone); }
-  if (email)         { updateFields.push('email = ?');         args.push(email); }
-  if (typeof status !== 'undefined') {
-    updateFields.push('status = ?');
-    args.push(status);
-  }
+//   if (username)      { updateFields.push('username = ?');      args.push(username); }
+//   if (password)      { 
+//     const hashed = bcrypt.hashSync(password, 10);
+//     updateFields.push('password = ?');
+//     args.push(hashed);
+//   }
+//   if (name_surname)  { updateFields.push('name_surname = ?');  args.push(name_surname); }
+//   if (gstNo)         { updateFields.push('gstNo = ?');         args.push(gstNo); }
+//   if (address)       { updateFields.push('address = ?');       args.push(address); }
+//   if (phone)         { updateFields.push('phone = ?');         args.push(phone); }
+//   if (email)         { updateFields.push('email = ?');         args.push(email); }
+//   if (typeof status !== 'undefined') {
+//     updateFields.push('status = ?');
+//     args.push(status);
+//   }
 
-  if (!updateFields.length) {
-    return res.status(400).json({ message: 'No fields to update' });
-  }
+//   if (!updateFields.length) {
+//     return res.status(400).json({ message: 'No fields to update' });
+//   }
 
-  // always update updated_on
-  updateFields.push('updated_on = ?');
-  args.push(moment().tz('Asia/Kolkata').format('YYYY-MM-DDTHH:mm:ss'));
+//   // always update updated_on
+//   updateFields.push('updated_on = ?');
+//   args.push(moment().tz('Asia/Kolkata').format('YYYY-MM-DDTHH:mm:ss'));
 
-  const sql = `
-    UPDATE \`user\`
-       SET ${updateFields.join(', ')}
-     WHERE id = ?
-  `;
-  args.push(id);
+//   const sql = `
+//     UPDATE \`user\`
+//        SET ${updateFields.join(', ')}
+//      WHERE id = ?
+//   `;
+//   args.push(id);
 
-  db.query(sql, args, (err, result) => {
-    if (err) {
-      console.error('DB error [updateUser]:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-    res.json({ message: 'User updated' });
-  });
-};
+//   db.query(sql, args, (err, result) => {
+//     if (err) {
+//       console.error('DB error [updateUser]:', err);
+//       return res.status(500).json({ message: 'Internal server error' });
+//     }
+//     res.json({ message: 'User updated' });
+//   });
+// };
 
 /**
  * DELETE /api/users/:id
  */
 export const deleteUser = (req, res) => {
   const { id } = req.params;
-  const sql = 'DELETE FROM `user` WHERE id = ?';
+  const sql = 'DELETE FROM user WHERE id = ?';
   db.query(sql, [id], (err, result) => {
     if (err) {
       console.error('DB error [deleteUser]:', err);
