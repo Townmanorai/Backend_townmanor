@@ -1,5 +1,3 @@
-
-
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../config/db.js';
@@ -90,7 +88,7 @@ export const login =  (req, res) => {
 
     console.log(process.env.JWT_SECRET);
     // Generate JWT
-    const jwttoken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const jwttoken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '10h' });
 
     // Set the JWT token in an HTTP-only cookie
     res.cookie('jwttoken', jwttoken, { 
@@ -295,5 +293,90 @@ export const getUserById = (req, res) => {
 //   });
 // };
 
+// Google Authentication Login
+export const googleLogin = (req, res) => {
+  const { email, displayName, uid } = req.body;
+
+  if (!email || !uid) {
+    return res.status(400).json({ message: 'Email and uid are required' });
+  }
+
+  // Check if user with this email already exists
+  db.query('SELECT * FROM user WHERE email = ?', [email], (err, results) => {
+    if (err) {
+      console.error("Database Select Error: ", err);
+      return res.status(500).json({ message: 'Internal server error. Please try again later.' });
+    }
+
+    let userId;
+    
+    if (results.length === 0) {
+      // User doesn't exist, create a new one
+      const username = email;
+      const name_surname = displayName || email.split('@')[0];
+      const created_on = moment().tz("Asia/Kolkata").format("YYYY-MM-DDTHH:mm:ss");
+      const updated_on = created_on;
+      const status = 1;
+      
+      // Create password hash for a random password (user will use Google login anyway)
+      const randomPassword = Math.random().toString(36).slice(-10);
+      const hashedPassword = bcrypt.hashSync(randomPassword, 10);
+      
+      // Insert the new user
+      db.query(
+        'INSERT INTO user SET ?', 
+        {
+          username, 
+          password: hashedPassword,
+          name_surname,
+          email,
+          created_on,
+          updated_on,
+          status,
+          google_uid: uid
+        }, 
+        (err, result) => {
+          if (err) {
+            console.error("Database Insert Error: ", err);
+            return res.status(500).json({ message: 'Failed to create user account' });
+          }
+          
+          userId = result.insertId;
+          generateAndSendToken(userId, username, res);
+        }
+      );
+    } else {
+      // User exists, update their Google UID if needed
+      const user = results[0];
+      userId = user.id;
+      
+      if (!user.google_uid) {
+        db.query('UPDATE user SET google_uid = ? WHERE id = ?', [uid, userId], (err) => {
+          if (err) {
+            console.error("Database Update Error: ", err);
+            // Continue anyway - this is not critical
+          }
+        });
+      }
+      
+      generateAndSendToken(userId, user.username, res);
+    }
+  });
+};
+
+// Helper function to generate JWT token and send response
+function generateAndSendToken(userId, username, res) {
+  // Generate JWT
+  const jwttoken = jwt.sign({ id: userId, username: username }, process.env.JWT_SECRET, { expiresIn: '10h' });
+
+  // Set the JWT token in an HTTP-only cookie
+  res.cookie('jwttoken', jwttoken, {
+    // httpOnly: true,
+    // expires: new Date(Date.now() + 25892000000),
+    // secure: process.env.NODE_ENV === 'production'
+  });
+
+  return res.status(200).json({ message: 'Login successful' });
+}
 
   
