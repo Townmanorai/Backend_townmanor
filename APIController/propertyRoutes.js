@@ -219,7 +219,7 @@ router.get('/property/:id', (req, res) => {
 });
 
 // Get 7 random properties by city
-router.get('/property/:city', (req, res) => {
+router.get('/property/city/:city', (req, res) => {
   const { city } = req.params;                   
   const sql = `SELECT * FROM property_details WHERE city = ? AND status = 1 ORDER BY RAND() LIMIT 7 `;
 
