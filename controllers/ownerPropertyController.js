@@ -342,3 +342,39 @@ export const getFilteredProperties = (req, res) => {
     res.status(200).json(results);
   });
 };
+
+
+export const getFilteredPropertiesByName = (req, res) => {
+  const {
+    purpose,
+    configuration,
+    property_name 
+  } = req.query;
+
+  // base SQL
+  let sql = 'SELECT * FROM owner_property WHERE status = 1';
+  const filters = [];
+
+  if (purpose) {
+    sql += ' AND purpose = ?';
+    filters.push(purpose);
+  }
+  if (configuration) {
+    sql += ' AND configuration = ?';
+    filters.push(configuration);
+  }
+  if (property_name) {
+    sql += ' AND property_name LIKE ?';
+    filters.push(`%${property_name}%`);
+  }
+
+  sql += ' ORDER BY created_at DESC';
+
+  db.query(sql, filters, (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(err);
+    }
+    res.status(200).json(results);
+  });
+};

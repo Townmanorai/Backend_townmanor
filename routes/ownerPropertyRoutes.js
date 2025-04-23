@@ -8,7 +8,8 @@ import {
   getAllPropertyByFilter,
   getSaleProperties,
   getRentProperties,
-  getFilteredProperties
+  getFilteredProperties,
+  getFilteredPropertiesByName,
 
 //   uploadPropertyImages,
 } from '../controllers/ownerPropertyController.js';
@@ -16,15 +17,16 @@ import {
 const router = express.Router();
 
 // Routes
-router.post('/', createProperty); // Create property
-router.get('/', getAllProperty); // Create property
-router.get('/filter', getAllPropertyByFilter); // filter property
-router.get('/filter/sale', getSaleProperties); // filter property
-router.get('/filter/rent', getRentProperties); // filter property
-router.get('/filter/suggestion', getFilteredProperties); // filter property
-router.get('/:id', getPropertyById); // Get property by ID
-router.put('/:id', updateProperty); // Update property
-router.delete('/:id', deleteProperty); // Delete property
+router.post('/', createProperty); 
+router.get('/', getAllProperty); 
+router.get('/filter', getAllPropertyByFilter); 
+router.get('/filter/sale', getSaleProperties); 
+router.get('/filter/rent', getRentProperties); 
+router.get('/filter/suggestion', getFilteredProperties); 
+router.get('/filter/suggestion/name', getFilteredPropertiesByName);
+router.get('/:id', getPropertyById); 
+router.put('/:id', updateProperty); 
+router.delete('/:id', deleteProperty); 
 
 // router.post('/upload-images', uploadPropertyImages); // Upload images to S3
 

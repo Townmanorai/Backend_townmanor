@@ -218,6 +218,26 @@ router.get('/property/:id', (req, res) => {
   });
 });
 
+// Get 7 random properties by city
+router.get('/property/:city', (req, res) => {
+  const { city } = req.params;                   
+  const sql = `SELECT * FROM property_details WHERE city = ? AND status = 1 ORDER BY RAND() LIMIT 7 `;
+
+  db.query(sql, [city], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send({ error: 'Database error' });
+    }
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .json({ message: `No properties found in city "${city}"` });
+    }
+    res.status(200).json(results);
+  });
+});
+
+
 
 router.put('/property/agents/:id', async (req, res) => {
   const { id } = req.params;
