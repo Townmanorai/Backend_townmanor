@@ -86,22 +86,28 @@ export const login =  (req, res) => {
     //   return res.status(403).json({ message: 'Please verify your email before logging in.' });
     // }
 
-    console.log(process.env.JWT_SECRET);
+    console.log("JWT Secret:", process.env.JWT_SECRET);
     // Generate JWT
     const jwttoken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '10h' });
+    console.log("Generated JWT Token:", jwttoken);
 
-    // Set the JWT token in an HTTP-only cookie
+    // Set access control headers for the response
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    // Set the JWT token in an HTTP-only cookie with more compatible settings
     res.cookie('jwttoken', jwttoken, { 
+      maxAge: 36000000, // 10 hours in milliseconds
+      path: '/',
       // httpOnly: true,
-      // expires: new Date(Date.now()+ 25892000000)
-      // secure: process.env.NODE_ENV === 'production' 
+      // secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax' // Less strict same-site policy for better compatibility
     });
-    // console.log('User found:', user);
-    // console.log('Password matched:', passwordMatch);
-    // console.log('Generated Token:', jwttoken);
+    
+    console.log("Setting cookie:", 'jwttoken=' + jwttoken);
+    console.log("Response cookies:", res.getHeaders()['set-cookie']);
 
-
-    return res.status(200).json({ message: 'Login successful' });
+    return res.status(200).json({ message: 'Login successful', token: jwttoken });
   });
 };
 
@@ -367,16 +373,53 @@ export const googleLogin = (req, res) => {
 // Helper function to generate JWT token and send response
 function generateAndSendToken(userId, username, res) {
   // Generate JWT
+  console.log("Generating token for userId:", userId, "username:", username);
+  console.log("JWT Secret:", process.env.JWT_SECRET);
   const jwttoken = jwt.sign({ id: userId, username: username }, process.env.JWT_SECRET, { expiresIn: '10h' });
+  console.log("Generated JWT Token:", jwttoken);
 
-  // Set the JWT token in an HTTP-only cookie
+  // Set access control headers for the response
+  res.header('Access-Control-Allow-Origin', res.req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+
+  // Set the JWT token in an HTTP-only cookie with more compatible settings
   res.cookie('jwttoken', jwttoken, {
+    maxAge: 36000000, // 10 hours in milliseconds
+    path: '/',
     // httpOnly: true,
-    // expires: new Date(Date.now() + 25892000000),
-    // secure: process.env.NODE_ENV === 'production'
+    // secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' // Less strict same-site policy for better compatibility
   });
+  
+  console.log("Setting cookie:", 'jwttoken=' + jwttoken);
+  console.log("Response cookies:", res.getHeaders()['set-cookie']);
 
-  return res.status(200).json({ message: 'Login successful' });
+  return res.status(200).json({ message: 'Login successful', token: jwttoken });
 }
+
+// Check if token is valid
+export const checkToken = (req, res) => {
+  // Get the token from cookies or authorization header
+  const token = req.cookies.jwttoken || (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+    ? req.headers.authorization.split(' ')[1] : null);
+  
+  console.log("Checking token:", token);
+  console.log("Cookies received:", req.cookies);
+  console.log("Headers received:", req.headers);
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided', authenticated: false });
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Token is valid, decoded:", decoded);
+    return res.status(200).json({ message: 'Token is valid', authenticated: true, user: decoded });
+  } catch (error) {
+    console.error("Token verification error:", error);
+    return res.status(401).json({ message: 'Invalid or expired token', authenticated: false });
+  }
+};
 
   

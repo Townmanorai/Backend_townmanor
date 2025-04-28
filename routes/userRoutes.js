@@ -1,5 +1,5 @@
 import express from 'express';
-import { signup, login, verifyEmail ,protectedRoute ,getUsers ,getUserById, googleLogin} from '../APIController/userController.js';
+import { signup, login, verifyEmail ,protectedRoute ,getUsers ,getUserById, googleLogin, checkToken} from '../APIController/userController.js';
 
 const router = express.Router();
 
@@ -8,6 +8,7 @@ router.post('/login', login);
 router.post('/google-login', googleLogin);
 router.get('/verify/:token', verifyEmail);
 router.get('/api/protected' , protectedRoute);
+router.get('/check-token', checkToken);
 
 // ─── Admin / CRUD on users ─────────────────────────────────────────────────────
 router.get('/',          getUsers);      
