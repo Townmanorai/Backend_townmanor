@@ -10,6 +10,7 @@ import {
   getRentProperties,
   getFilteredProperties,
   getFilteredPropertiesByName,
+  getPropertiesByUsername,
 
 //   uploadPropertyImages,
 } from '../controllers/ownerPropertyController.js';
@@ -24,6 +25,7 @@ router.get('/filter/sale', getSaleProperties);
 router.get('/filter/rent', getRentProperties); 
 router.get('/filter/suggestion', getFilteredProperties); 
 router.get('/filter/suggestion/name', getFilteredPropertiesByName);
+router.get('/username/:username', getPropertiesByUsername);
 router.get('/:id', getPropertyById); 
 router.put('/:id', updateProperty); 
 router.delete('/:id', deleteProperty); 

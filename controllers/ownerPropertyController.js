@@ -378,3 +378,22 @@ export const getFilteredPropertiesByName = (req, res) => {
     res.status(200).json(results);
   });
 };
+
+// Get properties by username
+export const getPropertiesByUsername = (req, res) => {
+  const { username } = req.params;
+
+  db.query(
+    'SELECT * FROM owner_property WHERE username = ? AND status = 1',
+    [username],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error fetching properties', details: err });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ message: 'No properties found for this username' });
+      }
+      res.status(200).json(results);
+    }
+  );
+};
