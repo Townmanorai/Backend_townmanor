@@ -87,8 +87,8 @@ export const login =  (req, res) => {
     // }
 
     console.log("JWT Secret:", process.env.JWT_SECRET);
-    // Generate JWT
-    const jwttoken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '10h' });
+    // Generate JWT with 7 days expiration
+    const jwttoken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' });
     console.log("Generated JWT Token:", jwttoken);
 
     // Set access control headers for the response
@@ -97,7 +97,7 @@ export const login =  (req, res) => {
     
     // Set the JWT token in an HTTP-only cookie with more compatible settings
     res.cookie('jwttoken', jwttoken, { 
-      maxAge: 36000000, // 10 hours in milliseconds
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       path: '/',
       // httpOnly: true,
       // secure: process.env.NODE_ENV === 'production',
