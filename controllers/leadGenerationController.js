@@ -26,14 +26,14 @@ export const getLeads = (req, res) => {
 };
 
 export const createLead = (req, res) => {
-  const { name, phone_number, purpose, source } = req.body;
+  const { name, phone_number, purpose, source ,username , property_name } = req.body;
 
   const sql  = `
     INSERT INTO lead_generation
-      (name, phone_number, purpose, source)
-    VALUES (?, ?, ?, ?)
+      (name, phone_number, purpose, source,username,property_name)
+    VALUES (?, ?, ?, ? , ?, ?)
   `;
-  const args = [name, phone_number, purpose, source];
+  const args = [name, phone_number, purpose, source ,username,property_name];
 
   db.query(sql, args, (err, result) => {
     if (err) {
