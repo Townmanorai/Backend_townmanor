@@ -132,6 +132,32 @@ export const updateProperty = (req, res) => {
   );
 };
 
+export const updatePriority = (req, res) => {
+  const { id } = req.params;
+  const {
+    priority
+  } = req.body;
+
+  db.query(
+    `UPDATE owner_property 
+    SET priority = ?
+    WHERE id = ?`,
+    [
+      id , priority
+    ],
+
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error updating property', details: err });
+      }
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ error: 'Property not found' });
+      }
+      res.status(200).json({ message: 'Property updated successfully' });
+    }
+  );
+};
+
 // Delete (soft delete) property
 export const deleteProperty = (req, res) => {
   const { id } = req.params;

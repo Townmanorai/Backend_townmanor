@@ -11,6 +11,7 @@ import {
   getFilteredProperties,
   getFilteredPropertiesByName,
   getPropertiesByUsername,
+  updatePriority,
 
 //   uploadPropertyImages,
 } from '../controllers/ownerPropertyController.js';
@@ -28,6 +29,7 @@ router.get('/filter/suggestion/name', getFilteredPropertiesByName);
 router.get('/username/:username', getPropertiesByUsername);
 router.get('/:id', getPropertyById); 
 router.put('/:id', updateProperty); 
+router.put('/priority/:id', updatePriority); 
 router.delete('/:id', deleteProperty); 
 
 // router.post('/upload-images', uploadPropertyImages); // Upload images to S3
