@@ -10,7 +10,7 @@ export const createProperty = (req, res) => {
     residential, floorplan, image_repository, lat, lng, length, width, montly_rent, 
     securitydeposit, current_lease, remaining_time, boundary_wall, no_of_open_side, 
     floor_allowed, modifyinterior, lock_in_period, metro, school, hospital, mall, 
-    restaurant, bus, cinema,Commercail, leased
+    restaurant, bus, cinema,Commercail, leased,priority
   } = req.body;
 
   db.query(
@@ -22,9 +22,9 @@ export const createProperty = (req, res) => {
       residential, floorplan, image_repository, lat, lng, length, width, montly_rent, 
       securitydeposit, current_lease, remaining_time, boundary_wall, no_of_open_side, 
       floor_allowed, modifyinterior, lock_in_period, metro, school, hospital, mall, 
-      restaurant, bus, cinema,Commercail, leased
+      restaurant, bus, cinema,Commercail, leased,priority
     ) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 
     [
       username, pincode, city, locality, property_name, address, configuration, area_detail, area_type,
@@ -34,7 +34,7 @@ export const createProperty = (req, res) => {
       residential, JSON.stringify(floorplan), JSON.stringify(image_repository), lat, lng, 
       length, width, montly_rent, securitydeposit, current_lease, remaining_time, boundary_wall, 
       no_of_open_side, floor_allowed, modifyinterior, lock_in_period, metro, school, hospital, 
-      mall, restaurant, bus, cinema, Commercail, leased
+      mall, restaurant, bus, cinema, Commercail, leased,priority
     ],
 
     (err, results) => {
@@ -92,7 +92,7 @@ export const updateProperty = (req, res) => {
     residential, floorplan, image_repository, lat, lng, length, width, montly_rent, 
     securitydeposit, current_lease, remaining_time, boundary_wall, no_of_open_side, 
     floor_allowed, modifyinterior, lock_in_period, metro, school, hospital, mall, 
-    restaurant, bus, cinema, Commercail, leased
+    restaurant, bus, cinema, Commercail, leased,priority
   } = req.body;
 
   db.query(
@@ -106,7 +106,7 @@ export const updateProperty = (req, res) => {
     montly_rent = ?, securitydeposit = ?, current_lease = ?, remaining_time = ?, boundary_wall = ?, 
     no_of_open_side = ?, floor_allowed = ?, modifyinterior = ?, lock_in_period = ?, 
     metro = ?, school = ?, hospital = ?, mall = ?, restaurant = ?, bus = ?, cinema = ?, Commercail = ?,
-    leased = ? 
+    leased = ? ,priority = ?
     WHERE id = ?`,
 
     [
@@ -117,7 +117,7 @@ export const updateProperty = (req, res) => {
       residential, JSON.stringify(floorplan), JSON.stringify(image_repository), lat, lng, 
       length, width, montly_rent, securitydeposit, current_lease, remaining_time, boundary_wall, 
       no_of_open_side, floor_allowed, modifyinterior, lock_in_period, metro, school, hospital, 
-      mall, restaurant, bus, cinema, leased,Commercail, id
+      mall, restaurant, bus, cinema, leased,Commercail, id , priority
     ],
 
     (err, results) => {
