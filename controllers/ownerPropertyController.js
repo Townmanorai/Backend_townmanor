@@ -143,7 +143,7 @@ export const updatePriority = (req, res) => {
     SET priority = ?
     WHERE id = ?`,
     [
-      id , priority
+      priority , id
     ],
 
     (err, results) => {
