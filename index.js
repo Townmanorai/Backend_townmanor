@@ -38,6 +38,8 @@ import articleRoutes from './routes/articleRoutes.js';
 import crmRoutes from './routes/crmRoutes.js';
 import leadGenRoutes from './routes/leadGenerationRoutes.js';
 import colivingRoutes from './routes/colivingRoutes.js';
+import colivingRoomsRoutes from './routes/colivingRoomsRoutes.js';
+
 
 
 
@@ -134,6 +136,9 @@ app.use('/image',awssimageuploadcontroller);
 // //colivingRooms
 
 app.use('/coliving', colivingRoutes);
+
+//coliving rooms
+app.use('/coliving-rooms', colivingRoomsRoutes);
 
 
 
