@@ -39,6 +39,7 @@ import crmRoutes from './routes/crmRoutes.js';
 import leadGenRoutes from './routes/leadGenerationRoutes.js';
 import colivingRoutes from './routes/colivingRoutes.js';
 import colivingRoomsRoutes from './routes/colivingRoomsRoutes.js';
+import rentAgreementRoutes from './routes/rentAgreementRoutes.js';
 
 
 
@@ -139,6 +140,9 @@ app.use('/coliving', colivingRoutes);
 
 //coliving rooms
 app.use('/coliving-rooms', colivingRoomsRoutes);
+
+// Rent Agreement routes
+app.use('/rentagreement', rentAgreementRoutes);
 
 
 
