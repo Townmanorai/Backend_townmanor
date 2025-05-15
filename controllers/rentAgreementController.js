@@ -1,120 +1,190 @@
+
+
 import db from '../config/db.js';
 
-// Get all rent agreements
-export const getAllRentAgreements = (req, res) => {
-  const sql = 'SELECT * FROM RentAgreement ORDER BY created_at DESC';
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to fetch rent agreements'
-      });
-    }
-    res.status(200).json({
-      success: true,
-      count: results.length,
-      data: results
-    });
-  });
-};
-
-// Get single rent agreement
+// Get rent agreement by ID
 export const getRentAgreementById = (req, res) => {
+  const { id } = req.params;
   const sql = 'SELECT * FROM RentAgreement WHERE id = ?';
-  db.query(sql, [req.params.id], (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to fetch rent agreement'
-      });
-    }
-    if (!result.length) {
-      return res.status(404).json({
-        success: false,
-        error: 'Rent agreement not found'
-      });
-    }
-    res.status(200).json({
-      success: true,
-      data: result[0]
-    });
-  });
-};
-
-// Create new rent agreement
-export const createRentAgreement = (req, res) => {
-  const agreementData = {
-    ...req.body,
-    created_at: new Date(),
-    updated_at: new Date()
-  };
-
-  const sql = `INSERT INTO RentAgreement SET ?`;
-  db.query(sql, agreementData, (err, result) => {
+  
+  db.query(sql, [id], (err, result) => {
     if (err) {
       console.error('Database error:', err);
       return res.status(500).json({
-        success: false,
-        error: 'Failed to create rent agreement'
+        error: 'Database error',
+        details: err.message
       });
     }
-    res.status(201).json({
-      success: true,
-      message: 'Rent agreement created successfully',
-      data: { id: result.insertId, ...agreementData }
-    });
+    if (result.length === 0) {
+      return res.status(404).json({
+        error: 'Rent agreement not found',
+        id: id
+      });
+    }
+    res.status(200).json(result[0]);
   });
 };
 
-// Update rent agreement
+
+export const createRentAgreement = (req, res) => {
+  try {
+    // Required fields validation
+    const requiredFields = [
+      'city', 'security_amount', 'monthly_rent', 
+      'landlord_name', 'landlord_phone', 'landlord_email',
+      'tenant_name', 'tenant_phone', 'tenant_email'
+    ];
+
+    const missingFields = requiredFields.filter(field => !req.body[field]);
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        fields: missingFields
+      });
+    }
+
+    // Format date field
+    const agreementStartDate = req.body.agreement_start_date ? 
+      new Date(req.body.agreement_start_date).toISOString().split('T')[0] : 
+      null;
+
+    // Convert boolean fields to tinyint
+    const booleanFields = [
+      'has_maintenance',
+      'has_other_charges',
+      'landlord_verified',
+      'tenant_verified',
+      'consent_given',
+      'needs_physical_copy'
+    ];
+
+    const agreementData = {
+      ...req.body,
+      agreement_start_date: agreementStartDate,
+      created_at: new Date(),
+      updated_at: new Date()
+    };
+
+    // Convert boolean fields to 0/1
+    booleanFields.forEach(field => {
+      if (agreementData[field] !== undefined) {
+        agreementData[field] = agreementData[field] ? 1 : 0;
+      }
+    });
+
+    const sql = `INSERT INTO RentAgreement SET ?`;
+    db.query(sql, agreementData, (err, result) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({
+          error: 'Failed to create agreement'
+        });
+      }
+      
+      // Return only the ID
+      res.status(201).json({
+        message: 'Rent agreement created successfully',
+        id: result.insertId
+      });
+    });
+  } catch (error) {
+    console.error('Server error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+};
+
 export const updateRentAgreement = (req, res) => {
-  const { id } = req.params;
-  const updateData = {
-    ...req.body,
-    updated_at: new Date()
-  };
+  try {
+    const { id } = req.params;
+    
+    // Format date field if it exists in update data
+    const agreementStartDate = req.body.agreement_start_date ? 
+      new Date(req.body.agreement_start_date).toISOString().split('T')[0] : 
+      undefined;
 
-  const sql = `UPDATE RentAgreement SET ? WHERE id = ?`;
-  db.query(sql, [updateData, id], (err, result) => {
+    // Convert boolean fields to tinyint
+    const booleanFields = [
+      'has_maintenance',
+      'has_other_charges',
+      'landlord_verified',
+      'tenant_verified',
+      'consent_given',
+      'needs_physical_copy'
+    ];
+
+    const updateData = {
+      ...req.body,
+      agreement_start_date: agreementStartDate,
+      updated_at: new Date()
+    };
+
+    // Remove undefined fields
+    Object.keys(updateData).forEach(key => 
+      updateData[key] === undefined && delete updateData[key]
+    );
+
+    // Convert boolean fields to 0/1
+    booleanFields.forEach(field => {
+      if (updateData[field] !== undefined) {
+        updateData[field] = updateData[field] ? 1 : 0;
+      }
+    });
+
+    const sql = `UPDATE RentAgreement SET ? WHERE id = ?`;
+    db.query(sql, [updateData, id], (err, result) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({
+          error: 'Update failed'
+        });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          error: 'Agreement not found'
+        });
+      }
+     
+      res.json({ id: parseInt(id) ,
+         message: 'Rent agreement updated successfully',
+      });
+    });
+  } catch (error) {
+    console.error('Server error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+};
+// Delete rent agreement by ID
+export const deleteRentAgreement = (req, res) => {
+  const { id } = req.params;
+  
+  const sql = 'DELETE FROM RentAgreement WHERE id = ?';
+  db.query(sql, [id], (err, result) => {
     if (err) {
+      console.error('Database error:', err);
       return res.status(500).json({
-        success: false,
-        error: 'Failed to update rent agreement'
+        error: 'Database error',
+        details: err.message
       });
     }
     if (result.affectedRows === 0) {
       return res.status(404).json({
-        success: false,
-        error: 'Rent agreement not found'
+        error: 'Rent agreement not found',
+        id: id
       });
     }
     res.json({
-      success: true,
-      message: 'Rent agreement updated successfully'
+      id: parseInt(id)
     });
   });
 };
 
-// Delete rent agreement
-export const deleteRentAgreement = (req, res) => {
-  const sql = 'DELETE FROM RentAgreement WHERE id = ?';
-  db.query(sql, [req.params.id], (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to delete rent agreement'
-      });
-    }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Rent agreement not found'
-      });
-    }
-    res.json({
-      success: true,
-      message: 'Rent agreement deleted successfully'
-    });
-  });
+export default {
+  getRentAgreementById,
+  createRentAgreement,
+  updateRentAgreement,
+  deleteRentAgreement
 };

@@ -1,6 +1,8 @@
+// Import necessary modules
+
+
 import express from 'express';
 import {
-  getAllRentAgreements,
   getRentAgreementById,
   createRentAgreement,
   updateRentAgreement,
@@ -9,8 +11,6 @@ import {
 
 const router = express.Router();
 
-// Define routes
-router.get('/', getAllRentAgreements);
 router.get('/:id', getRentAgreementById);
 router.post('/', createRentAgreement);
 router.put('/:id', updateRentAgreement);
