@@ -224,6 +224,75 @@ export const updateTenantVerification = (req, res) => {
   }
 };
 
+// Update landlord verification status
+export const updateLandlordVerification = (req, res) => {
+  try {
+    const { id } = req.params;
+    const { landlord_verified } = req.body;
+
+    if (landlord_verified === undefined) {
+      return res.status(400).json({
+        error: 'landlord_verified field is required'
+      });
+    }
+
+    const updateData = {
+      landlord_verified: landlord_verified ? 1 : 0,
+      updated_at: new Date()
+    };
+
+    // First check if agreement exists
+    const checkSql = 'SELECT landlord_verified FROM RentAgreement WHERE id = ?';
+    db.query(checkSql, [id], (checkErr, checkResult) => {
+      if (checkErr) {
+        console.error('Database error:', checkErr);
+        return res.status(500).json({
+          error: 'Failed to fetch agreement'
+        });
+      }
+
+      if (checkResult.length === 0) {
+        return res.status(404).json({
+          error: 'Rent agreement not found'
+        });
+      }
+
+      const currentStatus = checkResult[0].landlord_verified;
+      
+      // Only update if status is different
+      if (currentStatus === updateData.landlord_verified) {
+        return res.json({
+          id: parseInt(id),
+          message: 'Landlord verification status already up to date'
+        });
+      }
+
+      const updateSql = `UPDATE RentAgreement SET ? WHERE id = ?`;
+      db.query(updateSql, [updateData, id], (err, result) => {
+        if (err) {
+          console.error('Database error:', err);
+          return res.status(500).json({
+            error: 'Update failed'
+          });
+        }
+
+        res.json({
+          id: parseInt(id),
+          landlord_verified: Boolean(updateData.landlord_verified)
+        });
+      });
+    });
+  } catch (error) {
+    console.error('Server error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+};
+
+
+
+
 
 // Delete rent agreement by ID
 export const deleteRentAgreement = (req, res) => {
@@ -255,5 +324,6 @@ export default {
   createRentAgreement,
   updateRentAgreement,
   deleteRentAgreement,
-  updateTenantVerification
+  updateTenantVerification,
+  updateLandlordVerification
 };

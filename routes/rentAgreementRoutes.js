@@ -7,7 +7,8 @@ import {
   createRentAgreement,
   updateRentAgreement,
   deleteRentAgreement,
-  updateTenantVerification
+  updateTenantVerification,
+  updateLandlordVerification
 } from '../controllers/rentAgreementController.js';
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.post('/', createRentAgreement);
 router.put('/:id', updateRentAgreement);
 router.delete('/:id', deleteRentAgreement);
 router.patch('/:id/verify-tenant', updateTenantVerification);
+router.put('/:id/verify-landlord', updateLandlordVerification);
 
 export default router;
