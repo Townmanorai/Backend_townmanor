@@ -18,6 +18,6 @@ router.post('/', createRentAgreement);
 router.put('/:id', updateRentAgreement);
 router.delete('/:id', deleteRentAgreement);
 router.patch('/:id/verify-tenant', updateTenantVerification);
-router.put('/:id/verify-landlord', updateLandlordVerification);
+router.patch('/:id/verify-landlord', updateLandlordVerification);
 
 export default router;
