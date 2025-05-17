@@ -259,5 +259,60 @@ router.get('/payu/test/success', (req, res) => {
 });
 
 
+// PayU success callback
+router.post('/boster/payu/success', (req, res) => {
+  console.log('Success Callback:', req.body);
+  const { txnid, amount, productinfo, firstname, email, status, hash } = req.body;
+
+  // Verify response hash
+  const hashString = `${process.env.PAYU_MERCHANT_SALT}|${status}|||||||||||${email}|${firstname}|${productinfo}|${amount}|${txnid}|${process.env.PAYU_MERCHANT_KEY}`;
+  const generatedHash = crypto.createHash('sha512').update(hashString).digest('hex');
+
+  if (generatedHash !== hash) {
+    console.error('Hash mismatch');
+    return res.redirect('https://townmanor.ai/failure');
+  }
+
+  // Save transaction into tran_history table
+  const insertQuery = `INSERT INTO tran_history 
+    (txnid, amount, productinfo, firstname, email, status, hash, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`;
+
+  db.query(
+    insertQuery,
+    [txnid, amount, productinfo, firstname, email, status, hash],
+    (err) => {
+      if (err) {
+        console.error('Database insert error:', err);
+        return res.redirect('https://townmanor.ai/failure');
+      }
+
+      // Redirect to frontend success page
+      return res.redirect('https://townmanor.ai/success');
+    }
+  );
+});
+
+router.post('/boster/payu/failure', (req, res) => {
+  console.log('Failure Callback:', req.body);
+  const { txnid, amount, productinfo, firstname, email, status, hash } = req.body;
+
+  // Save transaction into tran_history table
+  const insertQuery = `INSERT INTO tran_history 
+    (txnid, amount, productinfo, firstname, email, status, hash, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`;
+
+  db.query(
+    insertQuery,
+    [txnid, amount, productinfo, firstname, email, status, hash],
+    (err) => {
+      if (err) {
+        console.error('Database insert error:', err);
+      }
+      // Redirect to frontend failure page
+      return res.redirect('https://townmanor.ai/failure');
+    }
+  );
+});
 
 export default router;
