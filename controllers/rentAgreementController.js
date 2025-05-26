@@ -296,7 +296,7 @@ export const updateLandlordVerification = (req, res) => {
 export const getLastTenAgreements = (req, res) => {
   const sql = `
     SELECT 
-      city, security_amount, stamp_paper_value, agreement_duration_months, monthly_rent,
+      id,city, security_amount, stamp_paper_value, agreement_duration_months, monthly_rent,
       has_maintenance, has_other_charges, agreement_start_date, yearly_increment,
       notice_period_months, lock_in_period_months, property_type, floor_number,
       configuration, area_sqft, property_number, building_name, locality, pincode, state,
