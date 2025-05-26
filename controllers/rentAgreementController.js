@@ -290,6 +290,41 @@ export const updateLandlordVerification = (req, res) => {
   }
 };
 
+// last 10 rent agreements without ID
+
+
+export const getLastTenAgreements = (req, res) => {
+  const sql = `
+    SELECT 
+      city, security_amount, stamp_paper_value, agreement_duration_months, monthly_rent,
+    has_maintenance, has_other_charges, agreement_start_date, yearly_increment,
+    notice_period_months, lock_in_period_months, property_type, floor_number,
+    configuration, area_sqft, property_number, building_name, locality, pincode, state,
+
+    landlord_name, landlord_age, landlord_phone, landlord_address,
+    landlord_identity_number, landlord_identity_type, landlord_email, landlord_verified,
+
+    tenant_name, tenant_age, tenant_phone, tenant_address,
+    tenant_identity_number, tenant_identity_type, tenant_email, tenant_verified,
+
+    consent_given, needs_physical_copy, transaction_id, total_amount_paid
+    FROM RentAgreement 
+    ORDER BY created_at DESC 
+    LIMIT 10`;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({
+        error: 'Failed to fetch agreements'
+      });
+    }
+
+    res.status(200).json(results);
+  });
+};
+
+
 
 
 
@@ -325,5 +360,6 @@ export default {
   updateRentAgreement,
   deleteRentAgreement,
   updateTenantVerification,
-  updateLandlordVerification
+  updateLandlordVerification,
+  getLastTenAgreements
 };

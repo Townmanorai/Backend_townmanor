@@ -8,16 +8,21 @@ import {
   updateRentAgreement,
   deleteRentAgreement,
   updateTenantVerification,
-  updateLandlordVerification
+  updateLandlordVerification,
+  getLastTenAgreements 
 } from '../controllers/rentAgreementController.js';
 
 const router = express.Router();
+router.get('/recent', getLastTenAgreements);
+router.post('/', createRentAgreement);
+
+
 
 router.get('/:id', getRentAgreementById);
-router.post('/', createRentAgreement);
 router.put('/:id', updateRentAgreement);
 router.delete('/:id', deleteRentAgreement);
 router.patch('/:id/verify-tenant', updateTenantVerification);
 router.patch('/:id/verify-landlord', updateLandlordVerification);
+
 
 export default router;
