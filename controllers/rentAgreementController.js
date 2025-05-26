@@ -309,7 +309,7 @@ export const getLastTenAgreements = (req, res) => {
 
     consent_given, needs_physical_copy, transaction_id, total_amount_paid
     FROM RentAgreement 
-    ORDER BY created_at DESC 
+    ORDER BY created_at ASC 
     LIMIT 10`;
 
   db.query(sql, (err, results) => {
