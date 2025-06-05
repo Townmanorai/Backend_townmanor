@@ -10,7 +10,7 @@ router.get('/commercial-details/:id', getCommercialDetailById);
 router.get('/commercial-details/city/:city', getCommercialDetailsByCity);
 router.post('/commercial-details', createCommercialDetail);
 router.put('/commercial-details/:id', updateCommercialDetail);
-router.delete('/commercial-details/:id', deleteCommercialDetail);
+// router.delete('/commercial-details/:id', deleteCommercialDetail);
 
 // Routes for commercial_units
 router.get('/commercial-units', getCommercialUnits);
