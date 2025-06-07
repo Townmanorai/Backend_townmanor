@@ -40,7 +40,7 @@ import leadGenRoutes from './routes/leadGenerationRoutes.js';
 import colivingRoutes from './routes/colivingRoutes.js';
 import colivingRoomsRoutes from './routes/colivingRoomsRoutes.js';
 import rentAgreementRoutes from './routes/rentAgreementRoutes.js';
-
+import verifastRoutes from './routes/verifastRoutes.js';
 
 
 
@@ -98,6 +98,8 @@ app.use(searchbar)
 
 // Use PayU routes
 app.use(payuRoutes);
+// Use Verifast routes
+app.use('/verifast',verifastRoutes);
 //ads routs
 app.use(adsAgentRoutes)
 app.use(userdetailsRoute)
