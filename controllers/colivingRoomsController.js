@@ -45,7 +45,8 @@ export const createColivingRoom = (req, res) => {
     area,
     bathroom,
     bedroom,
-    dedicated_work_space
+    dedicated_work_space,
+    property_id
   } = req.body;
 
   const sql = `INSERT INTO coliving_rooms SET ?`;
@@ -54,7 +55,8 @@ export const createColivingRoom = (req, res) => {
     area,
     bathroom,
     bedroom,
-    dedicated_work_space
+    dedicated_work_space,
+    property_id
   };
 
   db.query(sql, data, (err, result) => {
