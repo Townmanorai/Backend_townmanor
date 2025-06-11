@@ -1,4 +1,3 @@
-
 import db from '../config/db.js';
 import s3 from '../config/aws.js';
 
@@ -46,31 +45,19 @@ export const createColiving = async (req, res) => {
     nearby_location,
     address,
     latitude,
-    longitude
+    longitude,
+    image // Accept 'image' field as per frontend
   } = req.body;
-  
-  const images = req.files;
 
   try {
-    const uploadedImages = [];
-    if (images && images.length > 0) {
-      for (const image of images) {
-        const fileName = `coliving/${Date.now()}-${image.originalname}`;
-        const uploadResult = await s3.upload({
-          Bucket: 'townamnor.ai',
-          Key: fileName,
-          Body: image.buffer,
-          ContentType: image.mimetype,
-        }).promise();
-        uploadedImages.push(uploadResult.Location);
-      }
-    }
+    // Accept 'image' as array of URLs or single URL
+    const uploadedImages = Array.isArray(image) ? image : (image ? [image] : []);
 
     const sql = `INSERT INTO coliving (
       property_name, configuration, configuration_type, area, 
       parking, floor, available_date, description, amenities, 
-      nearby_location, image
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)`;
+      nearby_location, address, latitude, longitude, image
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     db.query(sql, [
       property_name,
@@ -94,7 +81,7 @@ export const createColiving = async (req, res) => {
       }
       res.status(201).json({ 
         id: result.insertId, 
-        images: uploadedImages 
+        message: 'Coliving property created successfully'
       });
     });
   } catch (error) {
@@ -107,22 +94,11 @@ export const createColiving = async (req, res) => {
 export const updateColiving = async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
-  const images = req.files;
 
   try {
-    if (images && images.length > 0) {
-      const uploadedImages = [];
-      for (const image of images) {
-        const fileName = `coliving/${Date.now()}-${image.originalname}`;
-        const uploadResult = await s3.upload({
-          Bucket: 'townamnor.ai',
-          Key: fileName,
-          Body: image.buffer,
-          ContentType: image.mimetype,
-        }).promise();
-        uploadedImages.push(uploadResult.Location);
-      }
-      updateData.image = JSON.stringify(uploadedImages);
+    // If image array is provided in body, use it directly
+    if (updateData.image) {
+      updateData.image = JSON.stringify(Array.isArray(updateData.image) ? updateData.image : [updateData.image]);
     }
 
     const fields = Object.keys(updateData).map(key => `${key} = ?`).join(', ');
