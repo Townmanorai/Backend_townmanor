@@ -133,3 +133,38 @@ export const deleteColivingRoom = (req, res) => {
     });
   });
 };
+
+
+// occupied status update
+
+export const updateColivingRoomOccupiedStatus = (req, res) => {
+  const { id } = req.params;
+  const { occupied } = req.body;
+
+  if (typeof occupied === 'undefined') {
+    return res.status(400).json({
+      success: false,
+      error: 'Occupied status is required.'
+    });
+  }
+
+  const sql = 'UPDATE coliving_rooms SET occupied = ? WHERE id = ?';
+  db.query(sql, [occupied, id], (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Room not found'
+      });
+    }
+    res.json({
+      success: true,
+      message: 'Occupied status updated successfully'
+    });
+  });
+};

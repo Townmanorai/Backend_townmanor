@@ -4,7 +4,8 @@ import {
   getColivingRoomById,
   createColivingRoom,
   updateColivingRoom,
-  deleteColivingRoom
+  deleteColivingRoom,
+  updateColivingRoomOccupiedStatus // added import
 } from '../controllers/colivingRoomsController.js';
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.get('/:id', getColivingRoomById);
 router.post('/', createColivingRoom);
 router.put('/:id', updateColivingRoom);
 router.delete('/:id', deleteColivingRoom);
+router.patch('/:id/occupied', updateColivingRoomOccupiedStatus); // API for updating occupied status
 
 export default router;
