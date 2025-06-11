@@ -43,7 +43,10 @@ export const createColiving = async (req, res) => {
     available_date,
     description,
     amenities,
-    nearby_location
+    nearby_location,
+    address,
+    latitude,
+    longitude
   } = req.body;
   
   const images = req.files;
@@ -67,7 +70,7 @@ export const createColiving = async (req, res) => {
       property_name, configuration, configuration_type, area, 
       parking, floor, available_date, description, amenities, 
       nearby_location, image
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)`;
 
     db.query(sql, [
       property_name,
@@ -80,6 +83,9 @@ export const createColiving = async (req, res) => {
       description,
       amenities,
       nearby_location,
+      address,
+      latitude,
+      longitude,
       JSON.stringify(uploadedImages)
     ], (err, result) => {
       if (err) {
