@@ -134,6 +134,29 @@ export const deleteColivingRoom = (req, res) => {
   });
 };
 
+// Get coliving rooms by property_id
+export const getColivingRoomsByPropertyId = (req, res) => {
+  const { property_id } = req.params;
+  const sql = 'SELECT * FROM coliving_rooms WHERE property_id = ?';
+  db.query(sql, [property_id], (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    if (!results.length) {
+      return res.status(404).json({
+        success: false,
+        error: 'No rooms found for this property_id'
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: results
+    });
+  });
+};
 
 // occupied status update
 
