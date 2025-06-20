@@ -49,7 +49,8 @@ export const createColivingRoom = (req, res) => {
     property_id,
     occupied,
     facilitie,
-    locking
+    locking,
+    image
   } = req.body;
 
   const sql = `INSERT INTO coliving_rooms SET ?`;
@@ -62,7 +63,8 @@ export const createColivingRoom = (req, res) => {
     property_id,
     occupied,
     facilitie,
-    locking
+    locking,
+    image
 
   };
 
