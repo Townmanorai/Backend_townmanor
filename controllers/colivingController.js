@@ -46,6 +46,11 @@ export const createColiving = async (req, res) => {
     address,
     latitude,
     longitude,
+    city,
+    state,
+    user_name,
+    status,
+
     image // Accept 'image' field as per frontend
   } = req.body;
 
@@ -73,6 +78,12 @@ export const createColiving = async (req, res) => {
       address,
       latitude,
       longitude,
+      city,
+      state,
+      user_name,
+      status,
+
+
       JSON.stringify(uploadedImages)
     ], (err, result) => {
       if (err) {
