@@ -6,7 +6,8 @@ import {
   updateColivingRoom,
   deleteColivingRoom,
   updateColivingRoomOccupiedStatus, // added import
-  getColivingRoomsByPropertyId // new import
+  getColivingRoomsByPropertyId, // new import
+  getColivingRoomsByUserName
 } from '../controllers/colivingRoomsController.js';
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.put('/:id', updateColivingRoom);
 router.delete('/:id', deleteColivingRoom);
 router.patch('/:id/occupied', updateColivingRoomOccupiedStatus); // API for updating occupied status
 router.get('/property/:property_id', getColivingRoomsByPropertyId); // new route
+router.get('/user/:username', getColivingRoomsByUserName); // <-- add this route
 
 export default router;

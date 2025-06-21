@@ -201,3 +201,42 @@ export const updateColivingRoomOccupiedStatus = (req, res) => {
     });
   });
 };
+
+
+// Get coliving rooms by user_name
+// export const getColivingRoomsByUserName = (req, res) => {
+//   const { username } = req.params;
+//   const sql = 'SELECT * FROM coliving_rooms WHERE user_name = ?';
+//   db.query(sql, [username], (err, results) => {
+//     if (err) {
+//       return res.status(500).json({
+//         success: false,
+//         error: 'Database error'
+//       });
+//     }
+//     if (!results.length) {
+//       return res.status(404).json({
+//         success: false,
+//         error: 'No rooms found for this user_name'
+//       });
+//     }
+//     res.status(200).json({
+//       success: true,
+//       data: results
+//     });
+//   });
+// };
+
+
+// Get coliving rooms by user_name
+export const getColivingRoomsByUserName = (req, res) => {
+  const { username } = req.params;
+  const sql = 'SELECT * FROM coliving_rooms WHERE user_name = ?';
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(err);
+    }
+    res.status(200).json(results);
+  });
+};
