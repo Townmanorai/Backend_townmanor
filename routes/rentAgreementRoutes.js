@@ -10,7 +10,8 @@ import {
   updateTenantVerification,
   updateLandlordVerification,
   getLastTenAgreements,
-  updateDocumentField
+  updateDocumentField,
+  getAgreementsByUsername 
 } from '../controllers/rentAgreementController.js';
 
 const router = express.Router();
@@ -25,5 +26,6 @@ router.delete('/:id', deleteRentAgreement);
 router.patch('/:id/verify-tenant', updateTenantVerification);
 router.patch('/:id/verify-landlord', updateLandlordVerification);
 router.put('/update-document/:id', updateDocumentField);
+router.get('/user/:username', getAgreementsByUsername);
 
 export default router;

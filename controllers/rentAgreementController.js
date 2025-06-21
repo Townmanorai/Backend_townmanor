@@ -30,7 +30,7 @@ export const createRentAgreement = (req, res) => {
     const requiredFields = [
       'city', 'security_amount', 'monthly_rent', 
       'landlord_name', 'landlord_phone', 'landlord_email',
-      'tenant_name', 'tenant_phone', 'tenant_email'
+      'tenant_name', 'tenant_phone', 'tenant_email','username'
     ];
 
     const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -307,7 +307,7 @@ export const getLastTenAgreements = (req, res) => {
       tenant_name, tenant_age, tenant_phone, tenant_address,
       tenant_identity_number, tenant_identity_type, tenant_email, tenant_verified,
 
-      consent_given, needs_physical_copy, transaction_id, total_amount_paid,document
+      consent_given, needs_physical_copy, transaction_id, total_amount_paid,document,username
     FROM RentAgreement 
     ORDER BY id desc
     LIMIT 10`;
@@ -400,6 +400,34 @@ export const updateDocumentField = (req, res) => {
     });
   }
 };
+
+// Get agreements by username
+
+export const getAgreementsByUsername = (req, res) => {
+  const { username } = req.params;
+
+  if (!username) {
+    return res.status(400).json({
+      error: 'Username is required'
+    });
+  }
+
+  const sql = `SELECT * FROM RentAgreement WHERE username = ? ORDER BY id DESC`;
+
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({
+        error: 'Failed to fetch agreements'
+      });
+    }
+
+    res.status(200).json(results);
+  });
+};
+
+
+
 
 export default {
   getRentAgreementById,
