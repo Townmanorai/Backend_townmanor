@@ -152,3 +152,15 @@ export const deleteColiving = (req, res) => {
 
 
 
+// Get all coliving properties by username
+export const getColivingByUsername = (req, res) => {
+  const { username } = req.params;
+  const sql = 'SELECT * FROM coliving WHERE user_name = ?';
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(err);
+    }
+    res.status(200).json(results);
+  });
+};
