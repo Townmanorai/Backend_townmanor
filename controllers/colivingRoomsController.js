@@ -240,3 +240,86 @@ export const getColivingRoomsByUserName = (req, res) => {
     res.status(200).json(results);
   });
 };
+
+
+// Update(put) coliving room
+export const putColivingRoom = (req, res) => {
+  const { id } = req.params;
+  const updateData = { ...req.body };
+
+  // Remove undefined fields
+  const fields = Object.keys(updateData)
+    .filter(key => updateData[key] !== undefined)
+    .map(key => `${key} = ?`);
+  const values = Object.values(updateData).filter(val => val !== undefined);
+
+  if (!fields.length) {
+    return res.status(400).json({
+      success: false,
+      error: 'No fields provided for update'
+    });
+  }
+
+  const sql = `UPDATE coliving_rooms SET ${fields.join(', ')} WHERE id = ?`;
+  values.push(id);
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Room not found'
+      });
+    }
+    res.json({
+      success: true,
+      message: 'Room updated successfully'
+    });
+  });
+};
+
+
+// export const putColivingRoom = (req, res) => {
+//   const { id } = req.params;
+//   const updateData = { ...req.body };
+
+//   // Filter out undefined or null fields
+//   const fields = Object.keys(updateData)
+//     .filter(key => updateData[key] !== undefined && updateData[key] !== null)
+//     .map(key => `${key} = ?`);
+//   const values = Object.values(updateData).filter(val => val !== undefined && val !== null);
+
+//   if (!fields.length) {
+//     return res.status(400).json({
+//       success: false,
+//       error: 'No fields provided for update'
+//     });
+//   }
+
+//   const sql = `UPDATE coliving_rooms SET ${fields.join(', ')} WHERE id = ?`;
+//   values.push(id);
+
+//   db.query(sql, values, (err, result) => {
+//     if (err) {
+//       return res.status(500).json({
+//         success: false,
+//         error: 'Database error'
+//       });
+//     }
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         error: 'Room not found'
+//       });
+//     }
+//     res.json({
+//       success: true,
+//       message: 'Room updated successfully'
+//     });
+//   });
+// };
