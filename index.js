@@ -41,6 +41,7 @@ import colivingRoutes from './routes/colivingRoutes.js';
 import colivingRoomsRoutes from './routes/colivingRoomsRoutes.js';
 import rentAgreementRoutes from './routes/rentAgreementRoutes.js';
 import verifastRoutes from './routes/verifastRoutes.js';
+import bookingsRoutes from './routes/bookingsRoutes.js';
 
 
 
@@ -146,6 +147,8 @@ app.use('/coliving-rooms', colivingRoomsRoutes);
 // Rent Agreement routes
 app.use('/rentagreement', rentAgreementRoutes);
 
+// bookings routes
+app.use('/bookings', bookingsRoutes);
 
 
 
