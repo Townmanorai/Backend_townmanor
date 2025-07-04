@@ -1,5 +1,5 @@
 import express from 'express';
-import { getBookingById, createBooking, updateBookingFields, getBookingDatesByRoomId } from '../controllers/bookingsController.js';
+import { getBookingById, createBooking, updateBookingFields, getBookingDatesByRoomId, getBookingsByUsername } from '../controllers/bookingsController.js';
 
 const router = express.Router();
 
@@ -12,5 +12,7 @@ router.get('/:id', getBookingById);
 // Route to update profile_picture, payment_receipt, and status
 router.patch('/:id', updateBookingFields);
 
+// API to get bookings by username
+router.get('/username/:username', getBookingsByUsername);
 
 export default router;

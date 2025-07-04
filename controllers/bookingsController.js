@@ -1,4 +1,21 @@
 import db from '../config/db.js';
+// Get bookings by username
+export const getBookingsByUsername = (req, res) => {
+  const { username } = req.params;
+  if (!username) {
+    return res.status(400).json({ error: 'Username is required' });
+  }
+  const sql = 'SELECT * FROM bookings WHERE username = ?';
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'No bookings found for this username' });
+    }
+    res.json(results);
+  });
+};
 
 // Get booking by ID
 export const getBookingById = (req, res) => {
@@ -31,7 +48,7 @@ export const createBooking = (req, res) => {
 // Update profile_picture, payment_receipt, and status for a booking
 export const updateBookingFields = (req, res) => {
   const { id } = req.params;
-  const { profile_picture, payment_receipt, status } = req.body;
+  const { profile_picture, payment_receipt, status , phone_data} = req.body;
   // Build dynamic SQL and values array
   const fields = [];
   const values = [];
@@ -46,6 +63,10 @@ export const updateBookingFields = (req, res) => {
   if (status !== undefined) {
     fields.push('status = ?');
     values.push(status);
+  }
+  if (phone_data !== undefined) {
+    fields.push('phone_data = ?');
+    values.push(phone_data);
   }
   if (fields.length === 0) {
     return res.status(400).json({ error: 'No valid fields provided to update.' });
