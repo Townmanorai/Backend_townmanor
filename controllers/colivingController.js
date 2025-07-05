@@ -61,8 +61,8 @@ export const createColiving = async (req, res) => {
     const sql = `INSERT INTO coliving (
       property_name, configuration, configuration_type, area, 
       parking, floor, available_date, description, amenities, 
-      nearby_location, address, latitude, longitude, image
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      nearby_location, address, latitude, longitude, city, state, user_name, status, image
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     db.query(sql, [
       property_name,
@@ -82,8 +82,6 @@ export const createColiving = async (req, res) => {
       state,
       user_name,
       status,
-
-
       JSON.stringify(uploadedImages)
     ], (err, result) => {
       if (err) {
