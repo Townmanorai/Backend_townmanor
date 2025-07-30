@@ -53,6 +53,7 @@ export const createLead = (req, res) => {
     const mailOptions = {
       from: 'sunnyofficial77@gmail.com',
       to: 'sunnyofficial77@gmail.com',
+      cc: 'support@townmanor.ai, nirmal@townmanor.in', // Add your desired CC emails here
       subject: 'New Lead Created',
       html: `
         <h1>New Lead Details</h1>
