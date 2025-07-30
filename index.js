@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import db from './config/db.js';
 import dotenv from 'dotenv';
+dotenv.config();
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs';
